@@ -86,3 +86,15 @@ st.write("In-Process: The CO2 bonus package is currently in the processing stage
          )
 st.write("Under Verification: The package is undergoing a verification process to ensure the accuracy of the carbon credits and compliance with relevant standards and methodologies.")
 
+if st.button('Tabla de información de Proyectos'):
+    page = 'page4'
+
+if 'page' in locals() and page == 'page4':
+    file_path2 = 'tabla2.csv'  # Reemplaza con la ruta de tu archivo CSV
+    data2 = pd.read_csv(file_path2)
+    data2 = data2.head(6)
+    st.write(data2)
+    # Botón para volver a la página 1
+    if st.button('Ocultar'):
+        page = 'page1'
+
