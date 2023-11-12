@@ -44,9 +44,10 @@ print(df3)
 # Crear un recuadro para seleccionar una opción
 opcion_elegida = st.selectbox('Selecciona una opción:', df3['Nombre de proyecto'])
 fila_seleccionada = df3[df3['SDG '] == opcion_elegida]
+
 #valor_otra_columna = fila_seleccionada['SDG '].iloc[0]
     # Mostrar el resultado en la página web
-print("Vaalor: ",fila_seleccionada)
+
 st.header('Resultado para la opción seleccionada:')
 st.write(fila_seleccionada)
 
