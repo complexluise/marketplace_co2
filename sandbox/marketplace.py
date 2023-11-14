@@ -8,10 +8,10 @@ import webbrowser
 
 st.title("MARKETPLACE")
 
-image1 = Image.open("images/f1.JPG")
+image1 = Image.open("../images/f1.JPG")
 st.image(image1, caption="CARBON CREDITS: $18.00")
 
-image2 = Image.open("images/f2.JPG")
+image2 = Image.open("../images/f2.JPG")
 st.image(image2, caption="CARBON REMOVAL GIFT CARD: from $25.00")
 
 st.title("MARKETPLACE PROJECTS")
@@ -20,7 +20,7 @@ st.write(
     "In this space, we present a wide variety of projects designed to reduce carbon emissions and contribute to a cleaner and more sustainable planet. Each project in our Marketplace has been carefully selected for its positive impact on the environment and its ability to offset carbon emissions."
 )
 
-image3 = Image.open("images/f3.JPG")
+image3 = Image.open("../images/f3.JPG")
 st.image(image3, caption="CARBON CREDITS: $18.00")
 
 st.title("CO2 Tons Reduced")
@@ -98,7 +98,7 @@ st.write(
     "A data set that describes carbon removal practices, such as historical and regenerative farming practices, used to calculate the total number of Bonds in a project."
 )
 
-image4 = Image.open("images/f4.JPG")
+image4 = Image.open("../images/f4.JPG")
 st.image(image4)
 
 st.header("¿How to Reduce My Carbon Footprint?")
@@ -119,7 +119,7 @@ st.write(
 )
 
 # Leer el archivo CSV
-file_path = "tabla1.csv"  # Reemplaza con la ruta de tu archivo CSV
+file_path = "../tabla1.csv"  # Reemplaza con la ruta de tu archivo CSV
 data = pd.read_csv(file_path)
 data = data.head(6)
 
@@ -130,7 +130,7 @@ st.write(
     "This table displays a detailed record of the purchased bonds, providing an insight into their traceability and current status."
 )
 
-file_path = "tabla2.csv"  # Reemplaza con la ruta de tu archivo CSV
+file_path = "../tabla2.csv"  # Reemplaza con la ruta de tu archivo CSV
 data2 = pd.read_csv(file_path)
 data2 = data2.head(6)
 st.write(data2)
