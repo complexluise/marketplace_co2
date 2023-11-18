@@ -1,7 +1,22 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
-df3 = pd.read_csv("tabla3.csv")
-print(df3.columns[0])
-print(df3[df3["SDG "] == "Solariza África "])
+file_path = 'tabla3.csv'  # Reemplaza con la ruta de tu archivo CSV
+data = pd.read_csv(file_path)
+
+# Manejar los valores NaN en la columna 'Industría'
+data['Industría'].fillna('Desconocido', inplace=True)
+
+categorias = data['Industría'].unique().tolist()
+
+print(categorias)
+
+# Obtener las frecuencias de cada nombre
+frecuencias = data['Industría'].value_counts()
+
+# Crear un vector con las frecuencias en el mismo orden que categorias
+ventas = [frecuencias[i] for i in categorias]
+porcentajes = [i/np.sum(ventas) for i in ventas]
+print(porcentajes)
