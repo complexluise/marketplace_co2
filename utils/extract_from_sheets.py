@@ -1,12 +1,12 @@
 from typing import List
 
-import streamlit as st
+from streamlit import connection
 
-from pandas import DataFrame
+from pandas import DataFrame, merge
 from streamlit_gsheets import GSheetsConnection
 
 # Create a connection object.
-conn = st.connection("gsheets", type=GSheetsConnection)
+conn = connection("gsheets", type=GSheetsConnection)
 
 
 def select_columns(df: DataFrame, column_start: str, column_end: str) -> DataFrame:
@@ -73,3 +73,14 @@ def get_bonos_purchased():
             "Status",
         ],
     )
+
+
+def get_bonos_project_enriched():
+    df_projects = get_projects()
+    df_bonos_project = get_bonos_project()
+
+    return merge(df_bonos_project, df_projects, how="inner")
+
+
+# %%
+df = get_bonos_project_enriched
