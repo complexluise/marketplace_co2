@@ -11,21 +11,24 @@ st.title("Net Zeo 2")
 
 st.title("COSTA AZUL WIND PARK")
 
+# Dividir la pantalla en cuatro columnas
+col1, col2, col3, col4 = st.columns(4)
 
-image5 = Image.open("../images/f5.JPG")
-st.image(image5, caption="Location BOG-COL")
+with col1:
+    image5 = Image.open("../images/f5.JPG")
+    st.image(image5, caption="Location BOG-COL")
 
+with col2:
+    image6 = Image.open("../images/f6.JPG")
+    st.image(image6, caption="Industry Energy")
 
-image6 = Image.open("../images/f6.JPG")
-st.image(image6, caption="Industry Energy")
+with col3:
+    image7 = Image.open("../images/f7.JPG")
+    st.image(image7, caption="Methodology vcs")
 
-
-image7 = Image.open("../images/f7.JPG")
-st.image(image7, caption="Methodology vcs")
-
-
-image8 = Image.open("../images/f8.JPG")
-st.image(image8, caption="Generated Bonds 400")
+with col4:
+    image8 = Image.open("../images/f8.JPG")
+    st.image(image8, caption="Generated Bonds 400")
 
 
 image9 = Image.open("../images/f9.JPG")
@@ -52,6 +55,20 @@ fila_seleccionada = df3[df3["SDG "] == opcion_elegida]
 
 st.header("Resultado para la opción seleccionada:")
 st.write(fila_seleccionada)
+
+col1, col2 = st.columns(2)
+
+# Agregar contenido a la primera columna
+with col1:
+    st.header("Columna 1")
+    st.write("Este es el contenido de la primera columna.")
+
+
+# Agregar contenido a la segunda columna
+with col2:
+    st.header("Columna 2")
+    st.write("Este es el contenido de la segunda columna.")
+
 
 st.title("For a Sustainable Future")
 st.write(
