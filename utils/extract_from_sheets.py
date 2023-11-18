@@ -126,5 +126,6 @@ def get_bonos_project_enriched() -> DataFrame:
 
     return merge(df_bonos_project, df_projects, how="inner")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     df = get_bonos_project_enriched()
