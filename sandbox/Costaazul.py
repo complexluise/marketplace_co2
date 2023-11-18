@@ -15,23 +15,23 @@ st.title("COSTA AZUL WIND PARK")
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
-    image5 = Image.open("Images/f5.JPG")
+    image5 = Image.open("../images/f5.JPG")
     st.image(image5, caption="Location BOG-COL")
 
 with col2:
-    image6 = Image.open("Images/f6.JPG")
+    image6 = Image.open("../images/f6.JPG")
     st.image(image6, caption="Industry Energy")
 
 with col3:
-    image7 = Image.open("Images/f7.JPG")
+    image7 = Image.open("../images/f7.JPG")
     st.image(image7, caption="Methodology vcs")
 
 with col4:
-    image8 = Image.open("Images/f8.JPG")
+    image8 = Image.open("../images/f8.JPG")
     st.image(image8, caption="Generated Bonds 400")
 
 
-image9 = Image.open("Images/f9.JPG")
+image9 = Image.open("../images/f9.JPG")
 st.image(image9, caption="NET ZEO 2")
 
 st.header("about")
@@ -41,7 +41,7 @@ st.write(
 #################3#
 
 
-df3 = pd.read_csv("tabla3.csv")
+df3 = pd.read_csv("../tabla3.csv")
 df3.head()
 print(df3)
 
@@ -80,7 +80,7 @@ st.write(
     "Reduce your environmental impact by aligning your approach with the Sustainable Development Goals (SDG)."
 )
 
-image10 = Image.open("Images/f10.JPG")
+image10 = Image.open("../images/f10.JPG")
 st.image(image10)
 
 url = "https://github.com/complexluise/marketplace_co2/blob/main/Parte1.py"
@@ -91,20 +91,20 @@ if st.button("Buy Carbon Credits"):
 
 st.title("This project focuses on three sustainability goals.")
 
-image11 = Image.open("Images/f11.JPG")
+image11 = Image.open("../images/f11.JPG")
 st.image(image11)
 st.header("SDG 7")
 st.write(
     "Ensure access to affordable, reliable, sustainable, and modern energy for all."
 )
 
-image12 = Image.open("Images/f12.JPG")
+image12 = Image.open("../images/f12.JPG")
 st.image(image12)
 st.header("SDG 11")
 st.write("Make cities and human settlements inclusive, safe, resilient.")
 
 
-image13 = Image.open("Images/f13.JPG")
+image13 = Image.open("../images/f13.JPG")
 st.image(image13)
 st.header("SDG 13")
 st.write("Take urgent action to combat climate change and its impacts.")
