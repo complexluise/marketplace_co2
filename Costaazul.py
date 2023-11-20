@@ -5,6 +5,9 @@ import base64
 import numpy as np
 from PIL import Image
 import webbrowser
+import folium
+from geopy.geocoders import Nominatim
+import pycountry
 
 
 st.title("Net Zeo 2")
@@ -34,46 +37,105 @@ with col4:
 image9 = Image.open("Images/f9.JPG")
 st.image(image9, caption="NET ZEO 2")
 
-st.header("about")
-st.write(
-    "Installation and operation of wind turbines to generate clean and renewable energy."
-)
-#################3#
-
-
-df3 = pd.read_csv("tabla3.csv")
-df3.head()
-print(df3)
-
+# Lista de datos
+df3 = pd.read_csv('tabla3.csv')  # Reemplaza con la ruta de tu archivo CSV
+df3 = df3.iloc[:-1]
 
 # Crear un recuadro para seleccionar una opción
 opcion_elegida = st.selectbox("Selecciona una opción:", df3["Nombre de proyecto"])
-fila_seleccionada = df3[df3["SDG "] == opcion_elegida]
+fila_seleccionada = df3.loc[df3['Nombre de proyecto'] == opcion_elegida, 'Industría'].iloc[0]
+Description = df3.loc[df3['Nombre de proyecto'] == opcion_elegida, 'Descripcion '].iloc[0]
+En = df3.loc[df3['Nombre de proyecto'] == opcion_elegida, 'Encabezado Serial'].iloc[0]
+Location = df3.loc[df3['Nombre de proyecto'] == opcion_elegida, 'Ubicacion '].iloc[0]
+sdgs_table = df3.loc[df3['Nombre de proyecto'] == opcion_elegida, 'SDG '].iloc[0]
 
-# valor_otra_columna = fila_seleccionada['SDG '].iloc[0]
-# Mostrar el resultado en la página web
+def convertir_a_tupla(coordenadas_str):
+    try:
+        latitud, longitud = map(float, coordenadas_str.split(','))
+        return (latitud, longitud)
+    except ValueError:
+        return None
+
+# Ejemplo de uso: (40.7128, -74.0060)
+input_text = Location
+coordinates_transformed = convertir_a_tupla(input_text)
+
+
+print(coordinates_transformed)
+
+geolocator = Nominatim(user_agent="app")
+location = geolocator.reverse(coordinates_transformed)
+country_code = location.raw['address']['country_code']
+country_name = pycountry.countries.get(alpha_2=country_code).name
+city_name = location.raw['address']['city']
 
 st.header("Resultado para la opción seleccionada:")
 st.write(fila_seleccionada)
+st.write(En)
+st.write(Description)
 
 col1, col2 = st.columns(2)
 
 # Agregar contenido a la primera columna
 with col1:
-    st.header("Columna 1")
-    st.write("Este es el contenido de la primera columna.")
+    #Description = df3.loc[df3['Nombre de proyecto'] == opcion_elegida, 'Descripcion '].iloc[0]
+    st.header("About")
+    st.write(Description)
 
+    geolocator = Nominatim(user_agent="app")
+    location = geolocator.reverse((40.7128, -74.0060))
+    country_code = location.raw['address']['country_code']
+    country_name = pycountry.countries.get(alpha_2=country_code).name
+    city_name = location.raw['address']['city']
+
+    coo = "Coordenadas"
+    Pais = "País" 
+    Ciudad_1 = "Ciudad"
+    st.info(f"**{coo}**: {Location}")
+    st.info(f"**{Pais}**: {country_name}")
+    st.info(f"**{Ciudad_1}**: {city_name}")
+
+    country_code_lower = country_code.lower()
+    flag_url = f"https://www.countryflags.io/{country_code_lower}/flat/64.png"
+    st.image(flag_url, caption=f"Bandeira de {country_name}")
 
 # Agregar contenido a la segunda columna
 with col2:
-    st.header("Columna 2")
-    st.write("Este es el contenido de la segunda columna.")
+    st.header("Mapa")
+    ct_coordinates = coordinates_transformed
+
+# Crear un DataFrame con las coordenadas de Bogotá
+    data = {
+    'LATITUDE': [ct_coordinates[0]],
+    'LONGITUDE': [ct_coordinates[1]]
+    }
+    df = pd.DataFrame(data)
+
+# Mostrar el mapa en Streamlit con st.map()
+    st.title(f"Mapa de {city_name}, {country_name}")
+    st.map(df, zoom=11)
 
 
-st.title("For a Sustainable Future")
-st.write(
-    "Join the mission to change the world. Together, we work towards a sustainable future aligned with the United Nations Sustainable Development Goals, (SDG). Discover how you can make a difference today."
-)
+
+
+
+st.title("Details")
+
+Proyecto = "Nombre del proyecto"
+st.info(f"**{Proyecto}**: {opcion_elegida}")
+
+Localizacion_proyecto = "Localización Proyecto"
+st.info(f"**{Localizacion_proyecto}**: {country_name}, {city_name}")
+
+Industria_tipo = "Tipo de industría"
+st.info(f"**{Industria_tipo}**: {fila_seleccionada}")
+
+sdg_proyecto = "Lista de SDG"
+st.info(f"**{sdg_proyecto}**: {sdgs_table}")
+
+Encabezado = "Encabezado serial"
+st.info(f"**{Encabezado}**: {En}")
+
 
 st.header("Sustainable development goals")
 st.write(

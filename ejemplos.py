@@ -3,20 +3,19 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-file_path = 'tabla3.csv'  # Reemplaza con la ruta de tu archivo CSV
-data = pd.read_csv(file_path)
+df3 = pd.read_csv('tabla3.csv')  # Reemplaza con la ruta de tu archivo CSV
+df3 = df3.iloc[:-1]
+#df3.head()
+#print(df3)
 
-# Manejar los valores NaN en la columna 'Industría'
-data['Industría'].fillna('Desconocido', inplace=True)
 
-categorias = data['Industría'].unique().tolist()
+# Crear un recuadro para seleccionar una opción
+opcion_elegida = st.selectbox("Selecciona una opción:", df3["Nombre de proyecto"])
 
-print(categorias)
 
-# Obtener las frecuencias de cada nombre
-frecuencias = data['Industría'].value_counts()
-
-# Crear un vector con las frecuencias en el mismo orden que categorias
-ventas = [frecuencias[i] for i in categorias]
-porcentajes = [i/np.sum(ventas) for i in ventas]
-print(porcentajes)
+# Obtener el valor en la columna 'Nombre' para la misma fila
+valor_nombre = df3.loc[df3['Nombre de proyecto'] == opcion_elegida, 'Industría'].iloc[0]
+# valor_otra_columna = fila_seleccionada['SDG '].iloc[0]
+# Mostrar el resultado en la página web
+Location = df3.loc[df3['Nombre de proyecto'] == opcion_elegida, 'Ubicacion '].iloc[0]
+print("Que te dices? ",Location, type(Location))

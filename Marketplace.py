@@ -41,7 +41,7 @@ if button_graph1:
 if "page" in locals() and page == "page2":
     file_path = 'tabla3.csv'  # Reemplaza con la ruta de tu archivo CSV
     data = pd.read_csv(file_path)
-
+    data = data.iloc[:-1]
 # Manejar los valores NaN en la columna 'Industría'
     data['Industría'].fillna('Desconocido', inplace=True)
 
