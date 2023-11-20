@@ -5,10 +5,11 @@ import base64
 import numpy as np
 from PIL import Image
 import webbrowser
-import folium
+from utils.extract_from_sheets import get_projects
+from streamlit import connection
+
 from geopy.geocoders import Nominatim
 import pycountry
-
 
 st.title("Net Zeo 2")
 
@@ -38,16 +39,19 @@ image9 = Image.open("Images/f9.JPG")
 st.image(image9, caption="NET ZEO 2")
 
 # Lista de datos
-df3 = pd.read_csv('tabla3.csv')  # Reemplaza con la ruta de tu archivo CSV
-df3 = df3.iloc[:-1]
+df3 = get_projects()  # Reemplaza con la ruta de tu archivo CSV
+#df3 = df3.iloc[:-1]
+
+#Nombres de las columnas del anterior dataframe
+nombres_columnas3 = df3.columns
 
 # Crear un recuadro para seleccionar una opción
-opcion_elegida = st.selectbox("Selecciona una opción:", df3["Nombre de proyecto"])
-fila_seleccionada = df3.loc[df3['Nombre de proyecto'] == opcion_elegida, 'Industría'].iloc[0]
-Description = df3.loc[df3['Nombre de proyecto'] == opcion_elegida, 'Descripcion '].iloc[0]
-En = df3.loc[df3['Nombre de proyecto'] == opcion_elegida, 'Encabezado Serial'].iloc[0]
-Location = df3.loc[df3['Nombre de proyecto'] == opcion_elegida, 'Ubicacion '].iloc[0]
-sdgs_table = df3.loc[df3['Nombre de proyecto'] == opcion_elegida, 'SDG '].iloc[0]
+opcion_elegida = st.selectbox("Selecciona una opción:", df3[nombres_columnas3[0]])
+fila_seleccionada = df3.loc[df3[nombres_columnas3[0]] == opcion_elegida, nombres_columnas3[1]].iloc[0]
+Description = df3.loc[df3[nombres_columnas3[0]] == opcion_elegida, nombres_columnas3[4]].iloc[0]
+En = df3.loc[df3[nombres_columnas3[0]] == opcion_elegida, nombres_columnas3[2]].iloc[0]
+Location = df3.loc[df3[nombres_columnas3[0]] == opcion_elegida, nombres_columnas3[3]].iloc[0]
+sdgs_table = df3.loc[df3[nombres_columnas3[0]] == opcion_elegida, nombres_columnas3[5]].iloc[0]
 
 def convertir_a_tupla(coordenadas_str):
     try:
@@ -67,7 +71,7 @@ geolocator = Nominatim(user_agent="app")
 location = geolocator.reverse(coordinates_transformed)
 country_code = location.raw['address']['country_code']
 country_name = pycountry.countries.get(alpha_2=country_code).name
-city_name = location.raw['address']['city']
+#city_name = location.raw['address']['city']
 
 st.header("Resultado para la opción seleccionada:")
 st.write(fila_seleccionada)
@@ -83,17 +87,17 @@ with col1:
     st.write(Description)
 
     geolocator = Nominatim(user_agent="app")
-    location = geolocator.reverse((40.7128, -74.0060))
+    location = geolocator.reverse(coordinates_transformed)
     country_code = location.raw['address']['country_code']
     country_name = pycountry.countries.get(alpha_2=country_code).name
-    city_name = location.raw['address']['city']
+    #city_name = location.raw['address']['city']
 
     coo = "Coordenadas"
     Pais = "País" 
     Ciudad_1 = "Ciudad"
     st.info(f"**{coo}**: {Location}")
     st.info(f"**{Pais}**: {country_name}")
-    st.info(f"**{Ciudad_1}**: {city_name}")
+    #st.info(f"**{Ciudad_1}**: {city_name}")
 
     country_code_lower = country_code.lower()
     flag_url = f"https://www.countryflags.io/{country_code_lower}/flat/64.png"
@@ -101,7 +105,7 @@ with col1:
 
 # Agregar contenido a la segunda columna
 with col2:
-    st.header("Mapa")
+    st.header(f"Mapa de {country_name}")
     ct_coordinates = coordinates_transformed
 
 # Crear un DataFrame con las coordenadas de Bogotá
@@ -112,7 +116,6 @@ with col2:
     df = pd.DataFrame(data)
 
 # Mostrar el mapa en Streamlit con st.map()
-    st.title(f"Mapa de {city_name}, {country_name}")
     st.map(df, zoom=11)
 
 
@@ -125,7 +128,7 @@ Proyecto = "Nombre del proyecto"
 st.info(f"**{Proyecto}**: {opcion_elegida}")
 
 Localizacion_proyecto = "Localización Proyecto"
-st.info(f"**{Localizacion_proyecto}**: {country_name}, {city_name}")
+st.info(f"**{Localizacion_proyecto}**: {country_name}")
 
 Industria_tipo = "Tipo de industría"
 st.info(f"**{Industria_tipo}**: {fila_seleccionada}")
@@ -153,23 +156,27 @@ if st.button("Buy Carbon Credits"):
 
 st.title("This project focuses on three sustainability goals.")
 
-image11 = Image.open("Images/f11.JPG")
-st.image(image11)
-st.header("SDG 7")
-st.write(
+col1, col2 = st.columns(2)
+
+with col1:
+    image11 = Image.open("Images/f11.JPG")
+    st.image(image11)
+    image12 = Image.open("Images/f12.JPG")
+    st.image(image12)
+    image13 = Image.open("Images/f13.JPG")
+    st.image(image13)
+
+with col2:
+    st.header("SDG 7")
+    st.write(
     "Ensure access to affordable, reliable, sustainable, and modern energy for all."
-)
+    )
+    st.header("SDG 11")
+    st.write("Make cities and human settlements inclusive, safe, resilient.")
+    st.header("SDG 13")
+    st.write("Take urgent action to combat climate change and its impacts.")
 
-image12 = Image.open("Images/f12.JPG")
-st.image(image12)
-st.header("SDG 11")
-st.write("Make cities and human settlements inclusive, safe, resilient.")
 
-
-image13 = Image.open("Images/f13.JPG")
-st.image(image13)
-st.header("SDG 13")
-st.write("Take urgent action to combat climate change and its impacts.")
 
 # Botón para redirigir a la URL
 url2 = "https://github.com/complexluise/marketplace_co2/blob/main/Parte1.py"

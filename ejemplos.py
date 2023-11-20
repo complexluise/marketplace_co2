@@ -18,4 +18,12 @@ valor_nombre = df3.loc[df3['Nombre de proyecto'] == opcion_elegida, 'Industría'
 # valor_otra_columna = fila_seleccionada['SDG '].iloc[0]
 # Mostrar el resultado en la página web
 Location = df3.loc[df3['Nombre de proyecto'] == opcion_elegida, 'Ubicacion '].iloc[0]
-print("Que te dices? ",Location, type(Location))
+
+def convertir_a_tupla(coordenadas_str):
+    try:
+        latitud, longitud = map(float, coordenadas_str.split(','))
+        return (latitud, longitud)
+    except ValueError:
+        return None
+
+print("xd",Location, type(Location), convertir_a_tupla(Location), type(convertir_a_tupla(Location)), type((40.7128, -74.0060)))
