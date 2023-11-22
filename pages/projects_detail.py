@@ -38,14 +38,11 @@ opcion_elegida = st.selectbox("Select the project to consulting:", df3["Nombre d
 
 Titulo_proy = convertir_a_mayusculas(opcion_elegida)
 
-st.markdown("<h1 style='text-align: center; color: green;'>NETZEO2</h1>", unsafe_allow_html=True)
-
-
-
+st.markdown("<h1 style='text-align: center; color: #576F57;; font-size: 16px;'>Netzeo2</h1>", unsafe_allow_html=True)
 
 # Título centrado de color verde y tamaño grande
 
-st.markdown(f"<h1 style='text-align: center; color: green;'>{Titulo_proy}</h1>", unsafe_allow_html=True)
+st.markdown(f"<h1 style='text-align: center; color: #576F57;; font-size: 64px;'>{Titulo_proy}</h1>", unsafe_allow_html=True)
 
 
 
@@ -101,34 +98,58 @@ df2 = pd.read_csv(file_path2)
 vcs = df1.loc[df1["Nombre de Proyecto"] == opcion_elegida, "Metodología"].iloc[0]
 bonos_generados = df1.loc[df1["Nombre de Proyecto"] == opcion_elegida, "Cantidad de Bonos generados"].iloc[0]
 
+
+
 with col1:
     image5 = Image.open("images/obj/f5.JPG")
-    st.image(image5, caption=f"Location:  {country_name}")
+    image5 = image5.resize((800, 600))
+    with st.columns(3)[1]:
+        st.image(image5)
+
+    st.markdown("<p style='text-align: center;'><strong>Location:</strong></p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='text-align: center;'>{country_name}</p>", unsafe_allow_html=True)
 
 with col2:
     image6 = Image.open("images/obj/f6.JPG")
-    st.image(image6, caption=f"Industry:  {fila_seleccionada}")
+    image6 = image6.resize((800, 600))
+    with st.columns(3)[1]:
+        st.image(image6)
+    st.markdown("<p style='text-align: center;'><strong>Industry:</strong></p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='text-align: center;'>{fila_seleccionada}</p>", unsafe_allow_html=True)
 
 with col3:
     image7 = Image.open("images/obj/f7.JPG")
-    st.image(image7, caption=f"Methodology: {vcs}")
+    image7 = image7.resize((800, 600))
+    with st.columns(3)[1]:
+        st.image(image7)
+    st.markdown("<p style='text-align: center;'><strong>Methodology:</strong></p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='text-align: center;'>{vcs}</p>", unsafe_allow_html=True)
+
 
 with col4:
     image8 = Image.open("images/obj/f8.JPG")
-    st.image(image8, caption=f"Generated Bonds: {bonos_generados}")
+    image8 = image8.resize((800, 600))
+    with st.columns(3)[1]:
+        st.image(image8)
+    st.markdown("<p style='text-align: center;'><strong>Generated CO2 credits:</strong></p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='text-align: center;'>{bonos_generados}</p>", unsafe_allow_html=True)
+
 
 
 image9 = Image.open("images/obj/f9.JPG")
-st.image(image9, caption="NET ZEO 2")
 
-#Creación de dos columnas
+
+image9 = image9.resize((1200, 400))
+st.image(image9)
+
+st.divider() 
 
 col1, col2 = st.columns(2)
 
 with col1:
     
     tamaño_letra = 40
-    titulo_html = f"<h1 style='text-align: center; color: #001f3f; font-size: {tamaño_letra}px;'>About</h1>"
+    titulo_html = f"<h1 style='text-align: center; color: #576F57; font-size: {tamaño_letra}px;'>About</h1>"
     st.markdown(titulo_html, unsafe_allow_html=True)
 
 
@@ -145,33 +166,54 @@ with col1:
 
     coo = "Coordinates"
     Pais = "Country" 
-    
-    st.info(f"**{coo}**: {Location}")
 
-    Proyecto = "Project Name"
-    st.info(f"**{Proyecto}**: {opcion_elegida}")
+    cols1,cols2=st.columns(2)
+    
+    with cols1:
+        st.info(f"**{coo}**:")
+    with cols2:
+        st.info(f"{Location}")
+
+    with cols1:
+        Proyecto = "Project Name"
+        st.info(f"**{Proyecto}**:")
+    with cols2:
+        st.info(f"{opcion_elegida}")
+
 
     #
     if opcion_elegida != "Parque Eólico Costa Azul":
         Localizacion_proyecto = "Location Project"
-        st.info(f"**{Localizacion_proyecto}**: {country_name}")
-    #
+        with cols1:
+            st.info(f"**{Localizacion_proyecto}**:")
+        with cols2:
+            st.info(f"{country_name}")
 
     Industria_tipo = "Industry Type"
-    st.info(f"**{Industria_tipo}**: {fila_seleccionada}")
+    with cols1:
+        st.info(f"**{Industria_tipo}**:")
+    with cols2:
+        st.info(f"{fila_seleccionada}")
+    
 
     sdg_proyecto = "List SDG"
-    st.info(f"**{sdg_proyecto}**: {sdgs_table}")
+    with cols1:
+        st.info(f"**{sdg_proyecto}**:")
+    with cols2:
+        st.info(f"{sdgs_table}")
 
     Encabezado = "Serial"
-    st.info(f"**{Encabezado}**: {En}")
+    with cols1:
+        st.info(f"**{Encabezado}**:")
+    with cols2:
+        st.info(f"{En}")
 
     
 
 # Agregar contenido a la segunda columna
 with col2:
     tamaño_letra = 40
-    titulo_html = f"<h1 style='text-align: center; color: #001f3f; font-size: {tamaño_letra}px;'>Mapa of {country_name}</h1>"
+    titulo_html = f"<h1 style='text-align: center; color: #576F57; font-size: {tamaño_letra}px;'>Mapa of {country_name}</h1>"
     st.markdown(titulo_html, unsafe_allow_html=True)
 
     ct_coordinates = coordinates_transformed
@@ -186,8 +228,10 @@ with col2:
 # Mostrar el mapa en Streamlit con st.map()
     st.map(df, zoom=11)
 
+st.divider() 
+
 tamaño_letra = 50
-titulo_html = f"<h1 style='text-align: center; color: #001f3f; font-size: {tamaño_letra}px;'>More information</h1>"
+titulo_html = f"<h1 style='text-align: center; color: #576F57; font-size: {tamaño_letra}px;'>More information</h1>"
 st.markdown(titulo_html, unsafe_allow_html=True)
 
 prov = df1.loc[df1["Nombre de Proyecto"] == opcion_elegida, "Proveedor (Nombre del representante legal del proyecto)"].iloc[0]
@@ -222,9 +266,11 @@ st.info(f"**{ser}**: {n_s}")
 status_type="Status"
 st.info(f"**{status_type}**: {stt}")
 
+st.divider() 
+
 title_sdg = convertir_a_mayusculas("Sustainable development goals")
 
-st.markdown(f"<h1 style='text-align: center; color: pink;'>{title_sdg}</h1>", unsafe_allow_html=True)
+st.markdown(f"<h1 style='text-align: center; color: #576F57;'>{title_sdg}</h1>", unsafe_allow_html=True)
 
 texto_html = """
     <div style='text-align: center; font-size: 24px;'>
@@ -278,7 +324,7 @@ cadena_texto = sdgs_table
 numeros_encontrados = extraer_numeros(cadena_texto)
 
 tamaño_letra = 50
-titulo_html = f"<h1 style='text-align: center; color: #096418; font-size: {tamaño_letra}px;'>This project focuses on these sustainable sevelopment goals: {numeros_encontrados[0]}, {numeros_encontrados[1]}</h1>"
+titulo_html = f"<h1 style='text-align: center; color: #576F57; font-size: {tamaño_letra}px;'>This project focuses on these sustainable sevelopment goals: {numeros_encontrados[0]}, {numeros_encontrados[1]}</h1>"
 st.markdown(titulo_html, unsafe_allow_html=True)
 
 with col1:
