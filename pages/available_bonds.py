@@ -17,15 +17,16 @@ st.set_page_config(
 
 st.write("Bonos disponibles")
 
-df = get_industry_data()
-fig = px.pie(
-    df,
-    values=CO2CreditsByProject.CREDITS_GENERATED.value,
-    names=Proyects.INDUSTRY.value,
-    color_discrete_sequence=px.colors.qualitative.Pastel,
-)
+with st.spinner("Please wait"):
+    df = get_industry_data()
+    fig = px.pie(
+        df,
+        values=CO2CreditsByProject.CREDITS_GENERATED.value,
+        names=Proyects.INDUSTRY.value,
+        color_discrete_sequence=px.colors.qualitative.Pastel,
+    )
 
-st.plotly_chart(fig)
+    st.plotly_chart(fig)
 
 
 def main():

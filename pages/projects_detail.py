@@ -39,15 +39,17 @@ def convertir_a_mayusculas(cadena):
     return cadena.upper()
 
 
-opcion_elegida = st.selectbox(
-    "Select the project to consulting:", df_proyectos[Proyects.PROJECT_NAME.value]
-)
+with st.spinner("Please wait"):
+    opcion_elegida = st.selectbox(
+        "Select the project to consulting:", df_proyectos[Proyects.PROJECT_NAME.value]
+    )
 
-Titulo_proy = convertir_a_mayusculas(opcion_elegida)
+    Titulo_proy = convertir_a_mayusculas(opcion_elegida)
 
-st.markdown(
-    "<h1 style='text-align: center; color: green;'>NETZEO2</h1>", unsafe_allow_html=True
-)
+    st.markdown(
+        "<h1 style='text-align: center; color: green;'>NETZEO2</h1>",
+        unsafe_allow_html=True,
+    )
 
 
 # Título centrado de color verde y tamaño grande
