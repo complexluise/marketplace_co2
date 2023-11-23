@@ -5,7 +5,11 @@ import base64
 import numpy as np
 from PIL import Image
 import webbrowser
-#from utils.extract_from_sheets import get_projects
+from utils.extract_from_sheets import (
+    get_projects,
+    get_bonos_project,
+    get_bonos_purchased,
+)
 from geopy.geocoders import Nominatim
 import pycountry
 import re
@@ -24,17 +28,19 @@ st.set_page_config(
 )
 
 
+# Lectura tercer dataframe
+df_proyectos = get_projects()
+df_proyectos = df_proyectos.iloc[:-1]
 
-#Lectura tercer dataframe
-file_path3 = "tabla3.csv"  # Reemplaza con la ruta de tu archivo CSV
-df3 = pd.read_csv(file_path3)
-df3 = df3.iloc[:-1]
 
-#Convertir a mayusculas para el titulo
+# Convertir a mayusculas para el titulo
 def convertir_a_mayusculas(cadena):
     return cadena.upper()
 
-opcion_elegida = st.selectbox("Select the project to consulting:", df3["Nombre de proyecto"])
+
+opcion_elegida = st.selectbox(
+    "Select the project to consulting:", df_proyectos["Project Name"]
+)
 
 Titulo_proy = convertir_a_mayusculas(opcion_elegida)
 
@@ -44,21 +50,32 @@ st.markdown("<h1 style='text-align: center; color: #576F57;; font-size: 16px;'>N
 
 st.markdown(f"<h1 style='text-align: center; color: #576F57;; font-size: 64px;'>{Titulo_proy}</h1>", unsafe_allow_html=True)
 
+# Obtiene los datos del proyecto
+fila_seleccionada = df_proyectos.loc[
+    df_proyectos["Project Name"] == opcion_elegida, "Industry"
+].iloc[0]
+Description = df_proyectos.loc[
+    df_proyectos["Project Name"] == opcion_elegida, "Description"
+].iloc[0]
+En = df_proyectos.loc[
+    df_proyectos["Project Name"] == opcion_elegida, "Serial Header"
+].iloc[0]
+Location = df_proyectos.loc[
+    df_proyectos["Project Name"] == opcion_elegida, "Location"
+].iloc[0]
+sdgs_table = df_proyectos.loc[
+    df_proyectos["Project Name"] == opcion_elegida, "Sustainable Development Goal"
+].iloc[0]
 
 
-fila_seleccionada = df3.loc[df3["Nombre de proyecto"] == opcion_elegida, "Industría"].iloc[0]
-Description = df3.loc[df3["Nombre de proyecto"] == opcion_elegida, "Descripcion "].iloc[0]
-En = df3.loc[df3["Nombre de proyecto"] == opcion_elegida, "Encabezado Serial"].iloc[0]
-Location = df3.loc[df3["Nombre de proyecto"] == opcion_elegida, "Ubicacion "].iloc[0]
-sdgs_table = df3.loc[df3["Nombre de proyecto"] == opcion_elegida, "SDG "].iloc[0]
-
-#Convierte la cadena str de location a valores numericos
 def convertir_a_tupla(coordenadas_str):
+    """Convierte la cadena str de location a valores numericos"""
     try:
-        latitud, longitud = map(float, coordenadas_str.split(','))
+        latitud, longitud = map(float, coordenadas_str.split(","))
         return (latitud, longitud)
     except ValueError:
         return None
+
 
 # Ejemplo de uso: (40.7128, -74.0060)
 input_text = Location
@@ -72,7 +89,7 @@ location = geolocator.reverse(coordinates_transformed)
 
 try:
     # Intenta acceder a la información en location
-    country_code = location.raw['address']['country_code']
+    country_code = location.raw["address"]["country_code"]
     country_name = pycountry.countries.get(alpha_2=country_code).name
     # Resto del código que utiliza country_code
 except (AttributeError, KeyError):
@@ -81,22 +98,22 @@ except (AttributeError, KeyError):
     country_name = None
 
 
-
-
 # Dividir la pantalla en cuatro columnas
 col1, col2, col3, col4 = st.columns(4)
 
-#Lectura primer y segundo dataframe
-#Lectura tercer dataframe
-file_path1 = "tabla1.csv"  # Reemplaza con la ruta de tu archivo CSV
-file_path2 = "tabla2.csv"  # Reemplaza con la ruta de tu archivo CSV
-df1 = pd.read_csv(file_path1)
-df2 = pd.read_csv(file_path2)
+# Obtemción de información del google sheets+
+df_bonos_proyecto = get_bonos_project()
+df_ordenes_compra = get_bonos_purchased()
 
 
-#Metodologia y bonos generados
-vcs = df1.loc[df1["Nombre de Proyecto"] == opcion_elegida, "Metodología"].iloc[0]
-bonos_generados = df1.loc[df1["Nombre de Proyecto"] == opcion_elegida, "Cantidad de Bonos generados"].iloc[0]
+# Metodologia y bonos generados
+vcs = df_bonos_proyecto.loc[
+    df_bonos_proyecto["Project Name"] == opcion_elegida, "Methodology"
+].iloc[0]
+bonos_generados = df_bonos_proyecto.loc[
+    df_bonos_proyecto["Project Name"] == opcion_elegida,
+    "Number of Credits Generated",
+].iloc[0]
 
 
 
@@ -142,7 +159,7 @@ image9 = Image.open("images/obj/f9.JPG")
 image9 = image9.resize((1200, 400))
 st.image(image9)
 
-st.divider() 
+st.divider()
 
 col1, col2 = st.columns(2)
 
@@ -152,14 +169,14 @@ with col1:
     titulo_html = f"<h1 style='text-align: center; color: #576F57; font-size: {tamaño_letra}px;'>About</h1>"
     st.markdown(titulo_html, unsafe_allow_html=True)
 
-
     st.write("Description of projects: ", Description)
 
     if opcion_elegida != "Parque Eólico Costa Azul":
+        # TODO Esto deberia ser más general porque pueden existir proyectos diferentes a Costa Azul que cumplen esta misma condición
         geolocator = Nominatim(user_agent="app")
-        location = geolocator.reverse(coordinates_transformed)   
-        country_code = location.raw['address']['country_code']
-        country_name = pycountry.countries.get(alpha_2=country_code).name  
+        location = geolocator.reverse(coordinates_transformed)
+        country_code = location.raw["address"]["country_code"]
+        country_name = pycountry.countries.get(alpha_2=country_code).name
     else:
         location = coordinates_transformed
         country_name = coordinates_transformed
@@ -168,7 +185,7 @@ with col1:
     Pais = "Country" 
 
     cols1,cols2=st.columns(2)
-    
+
     with cols1:
         st.info(f"**{coo}**:")
     with cols2:
@@ -194,7 +211,7 @@ with col1:
         st.info(f"**{Industria_tipo}**:")
     with cols2:
         st.info(f"{fila_seleccionada}")
-    
+
 
     sdg_proyecto = "List SDG"
     with cols1:
@@ -208,7 +225,6 @@ with col1:
     with cols2:
         st.info(f"{En}")
 
-    
 
 # Agregar contenido a la segunda columna
 with col2:
@@ -218,29 +234,42 @@ with col2:
 
     ct_coordinates = coordinates_transformed
 
-# Crear un DataFrame con las coordenadas de Bogotá
-    data = {
-    'LATITUDE': [ct_coordinates[0]],
-    'LONGITUDE': [ct_coordinates[1]]
-    }
+    # Crear un DataFrame con las coordenadas de Bogotá
+    data = {"LATITUDE": [ct_coordinates[0]], "LONGITUDE": [ct_coordinates[1]]}
     df = pd.DataFrame(data)
 
-# Mostrar el mapa en Streamlit con st.map()
+    # Mostrar el mapa en Streamlit con st.map()
     st.map(df, zoom=11)
 
-st.divider() 
+st.divider()
 
 tamaño_letra = 50
 titulo_html = f"<h1 style='text-align: center; color: #576F57; font-size: {tamaño_letra}px;'>More information</h1>"
 st.markdown(titulo_html, unsafe_allow_html=True)
 
-prov = df1.loc[df1["Nombre de Proyecto"] == opcion_elegida, "Proveedor (Nombre del representante legal del proyecto)"].iloc[0]
-entity = df1.loc[df1["Nombre de Proyecto"] == opcion_elegida, "Entidad verificadora"].iloc[0]
-g_b = df1.loc[df1["Nombre de Proyecto"] == opcion_elegida, "Cantidad de Bonos generados"].iloc[0]
-b_p = df1.loc[df1["Nombre de Proyecto"] == opcion_elegida, "Bonos en paquetes"].iloc[0]
-b_d = df1.loc[df1["Nombre de Proyecto"] == opcion_elegida, "Bonos Disponibles"].iloc[0]
-n_s = df1.loc[df1["Nombre de Proyecto"] == opcion_elegida, "Número serial de bonos"].iloc[0]
-stt = df1.loc[df1["Nombre de Proyecto"] == opcion_elegida, "Status"].iloc[0]
+prov = df_bonos_proyecto.loc[
+    df_bonos_proyecto["Project Name"] == opcion_elegida,
+    "Provider (Legal Representative of the Project)",
+].iloc[0]
+entity = df_bonos_proyecto.loc[
+    df_bonos_proyecto["Project Name"] == opcion_elegida, "Verifying Entity"
+].iloc[0]
+g_b = df_bonos_proyecto.loc[
+    df_bonos_proyecto["Project Name"] == opcion_elegida,
+    "Number of Credits Generated",
+].iloc[0]
+b_p = df_bonos_proyecto.loc[
+    df_bonos_proyecto["Project Name"] == opcion_elegida, "Credits in Packages"
+].iloc[0]
+b_d = df_bonos_proyecto.loc[
+    df_bonos_proyecto["Project Name"] == opcion_elegida, "Available Credits"
+].iloc[0]
+n_s = df_bonos_proyecto.loc[
+    df_bonos_proyecto["Project Name"] == opcion_elegida, "Serial Number of Credits"
+].iloc[0]
+stt = df_bonos_proyecto.loc[
+    df_bonos_proyecto["Project Name"] == opcion_elegida, "Status"
+].iloc[0]
 
 Localizacion_proyecto = "Provider"
 st.info(f"**{Localizacion_proyecto}**: {country_name}")
@@ -260,13 +289,13 @@ st.info(f"**{bones_pk}**: {b_p}")
 available = "Available Bonds"
 st.info(f"**{available}**: {b_d}")
 
-ser="Serial Number"
+ser = "Serial Number"
 st.info(f"**{ser}**: {n_s}")
 
-status_type="Status"
+status_type = "Status"
 st.info(f"**{status_type}**: {stt}")
 
-st.divider() 
+st.divider()
 
 title_sdg = convertir_a_mayusculas("Sustainable development goals")
 
@@ -281,43 +310,43 @@ texto_html = """
 """
 st.markdown(texto_html, unsafe_allow_html=True)
 
-url="https://sdgs.un.org/goals"
+url = "https://sdgs.un.org/goals"
 if st.button("Learn more about the Sustainable Development Goals."):
     webbrowser.open_new_tab(url)
 
 
-
 col1, col2, col3, col4, col5, col6 = st.columns(6)
 
-obj1=Image.open("images/sdg/1.JPG")
-obj2=Image.open("images/sdg/2.JPG")
-obj3=Image.open("images/sdg/3.JPG")
-obj4=Image.open("images/sdg/4.JPG")
-obj5=Image.open("images/sdg/5.JPG")
-obj6=Image.open("images/sdg/6.JPG")
-obj7=Image.open("images/sdg/7.JPG")
-obj8=Image.open("images/sdg/8.JPG")
-obj9=Image.open("images/sdg/9.JPG")
-obj10=Image.open("images/sdg/10.JPG")
-obj11=Image.open("images/sdg/11.JPG")
-obj12=Image.open("images/sdg/12.JPG")
-obj13=Image.open("images/sdg/13.JPG")
-obj14=Image.open("images/sdg/14.JPG")
-obj15=Image.open("images/sdg/15.JPG")
-obj16=Image.open("images/sdg/16.JPG")
-obj17=Image.open("images/sdg/17.JPG")
-obj18=Image.open("images/sdg/18.JPG")
+obj1 = Image.open("images/sdg/1.JPG")
+obj2 = Image.open("images/sdg/2.JPG")
+obj3 = Image.open("images/sdg/3.JPG")
+obj4 = Image.open("images/sdg/4.JPG")
+obj5 = Image.open("images/sdg/5.JPG")
+obj6 = Image.open("images/sdg/6.JPG")
+obj7 = Image.open("images/sdg/7.JPG")
+obj8 = Image.open("images/sdg/8.JPG")
+obj9 = Image.open("images/sdg/9.JPG")
+obj10 = Image.open("images/sdg/10.JPG")
+obj11 = Image.open("images/sdg/11.JPG")
+obj12 = Image.open("images/sdg/12.JPG")
+obj13 = Image.open("images/sdg/13.JPG")
+obj14 = Image.open("images/sdg/14.JPG")
+obj15 = Image.open("images/sdg/15.JPG")
+obj16 = Image.open("images/sdg/16.JPG")
+obj17 = Image.open("images/sdg/17.JPG")
+obj18 = Image.open("images/sdg/18.JPG")
 
 
-#La siguiente función se utiliza para extrer el número de sdgs de un proyecto
+# La siguiente función se utiliza para extrer el número de sdgs de un proyecto
 def extraer_numeros(cadena):
     # Utilizar expresión regular para encontrar todos los números en la cadena
-    numeros = re.findall(r'\b\d+\b', cadena)
-    
+    numeros = re.findall(r"\b\d+\b", cadena)
+
     # Convertir los números de texto a variables numéricas (int o float)
     numeros_numericos = [int(num) if num.isdigit() else float(num) for num in numeros]
-    
+
     return numeros_numericos
+
 
 # Ejemplo de uso
 cadena_texto = sdgs_table
@@ -341,7 +370,7 @@ with col3:
     st.image(obj7)
     st.image(obj8)
     st.image(obj9)
-    
+
 with col4:
     st.image(obj10)
     st.image(obj11)
@@ -356,7 +385,3 @@ with col6:
     st.image(obj16)
     st.image(obj17)
     st.image(obj18)
-
-
-
-

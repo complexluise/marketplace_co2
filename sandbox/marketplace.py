@@ -41,20 +41,20 @@ if button_graph1:
 
 # Página 2 - Contenido de la segunda "página"
 if "page" in locals() and page == "page2":
-    file_path = 'tabla3.csv'  # Reemplaza con la ruta de tu archivo CSV
+    file_path = "tabla3.csv"  # Reemplaza con la ruta de tu archivo CSV
     data = pd.read_csv(file_path)
 
-# Manejar los valores NaN en la columna 'Industría'
-    data['Industría'].fillna('Desconocido', inplace=True)
+    # Manejar los valores NaN en la columna 'Industría'
+    data["Industría"].fillna("Desconocido", inplace=True)
 
-    categorias = data['Industría'].unique().tolist()
+    categorias = data["Industría"].unique().tolist()
 
-# Obtener las frecuencias de cada nombre
-    frecuencias = data['Industría'].value_counts()
+    # Obtener las frecuencias de cada nombre
+    frecuencias = data["Industría"].value_counts()
 
-# Crear un vector con las frecuencias en el mismo orden que categorias
+    # Crear un vector con las frecuencias en el mismo orden que categorias
     ventas = [frecuencias[i] for i in categorias]
-    porcentajes = [100*i/np.sum(ventas) for i in ventas]
+    porcentajes = [100 * i / np.sum(ventas) for i in ventas]
 
     # Creación del gráfico de torta con Matplotlib
     fig, ax = plt.subplots()
@@ -126,5 +126,5 @@ data2 = pd.read_csv(file_path)
 data2 = data2.head(6)
 st.write(data2)
 
-#if st.button("Buy Carbon Credits."):
- #   webbrowser.open_new_tab(url)
+# if st.button("Buy Carbon Credits."):
+#   webbrowser.open_new_tab(url)
