@@ -105,15 +105,15 @@ def get_co2_credits_orders() -> DataFrame:
     Returns:
         DataFrame: A DataFrame containing selected columns and rows with data for purchased bonos.
     """
-    df_bonos_purchased = conn.read(
+    df_co2_credits_orders = conn.read(
         worksheet=SheetsDatabase.ORDER_BONUS.value,
         ttl=0,
         nrows=1000,
     )
-    return df_bonos_purchased.pipe(
+    return df_co2_credits_orders.pipe(
         select_columns,
         column_start=CO2CreditsByOrders.BUYERS_NAME.value,
-        column_end=CO2CreditsByOrders.COMPENSATION_DESCRIPTION,
+        column_end=CO2CreditsByOrders.COMPENSATION_DESCRIPTION.value,
     ).pipe(
         filter_rows_with_data,
         columnas_requeridas=[

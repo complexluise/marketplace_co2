@@ -8,12 +8,13 @@ import webbrowser
 from utils.extract_from_sheets import (
     get_projects,
     get_co2_credits_generated_by_project,
-    get_bonos_purchased,
+    get_co2_credits_orders,
 )
 from geopy.geocoders import Nominatim
 import pycountry
 import re
 
+from utils.models import Proyects, CO2CreditsByProject
 
 st.set_page_config(
     page_title="Projects Detail",
@@ -112,7 +113,7 @@ col1, col2, col3, col4 = st.columns(4)
 
 # Obtemción de información del google sheets+
 df_bonos_proyecto = get_co2_credits_generated_by_project()
-df_ordenes_compra = get_bonos_purchased()
+df_ordenes_compra = get_co2_credits_orders()
 
 
 # Metodologia y bonos generados
@@ -211,7 +212,7 @@ st.markdown(titulo_html, unsafe_allow_html=True)
 
 prov = df_bonos_proyecto.loc[
     df_bonos_proyecto[Proyects.PROJECT_NAME.value] == opcion_elegida,
-    "Provider (Legal Representative of the Project)",
+    CO2CreditsByProject.PROVIDER.value,
 ].iloc[0]
 entity = df_bonos_proyecto.loc[
     df_bonos_proyecto[Proyects.PROJECT_NAME.value] == opcion_elegida,
