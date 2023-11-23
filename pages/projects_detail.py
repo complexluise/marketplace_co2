@@ -224,19 +224,19 @@ g_b = df_bonos_proyecto.loc[
 ].iloc[0]
 b_p = df_bonos_proyecto.loc[
     df_bonos_proyecto[Proyects.PROJECT_NAME.value] == opcion_elegida,
-    CO2CreditsByProject.CREDITS_IN_PACKAGES.value,
+    CO2CreditsByProject.BUNDLED_CO2_CREDITS.value,
 ].iloc[0]
 b_d = df_bonos_proyecto.loc[
     df_bonos_proyecto[Proyects.PROJECT_NAME.value] == opcion_elegida,
-    CO2CreditsByProject.AVAILABLE_CREDITS.value,
+    CO2CreditsByProject.AVAILABLE_CO2_CREDITS.value,
 ].iloc[0]
 n_s = df_bonos_proyecto.loc[
     df_bonos_proyecto[Proyects.PROJECT_NAME.value] == opcion_elegida,
-    CO2CreditsByProject.SERIAL_NUMBER_CREDITS.value,
+    CO2CreditsByProject.SERIAL_NUMBER_CO2_CREDITS.value,
 ].iloc[0]
 stt = df_bonos_proyecto.loc[
     df_bonos_proyecto[Proyects.PROJECT_NAME.value] == opcion_elegida,
-    CO2CreditsByProject.STATUS.value,
+    CO2CreditsByProject.STATUS_BUNDLED.value,
 ].iloc[0]
 
 Localizacion_proyecto = CO2CreditsByProject.PROVIDER.value
@@ -260,7 +260,7 @@ st.info(f"**{available}**: {b_d}")
 ser = "Serial Number"
 st.info(f"**{ser}**: {n_s}")
 
-status_type = CO2CreditsByProject.STATUS.value
+status_type = CO2CreditsByProject.STATUS_BUNDLED.value
 st.info(f"**{status_type}**: {stt}")
 
 title_sdg = convertir_a_mayusculas("Sustainable development goals")
