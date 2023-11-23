@@ -5,7 +5,7 @@ class SheetsDatabase(Enum):
     # Change to CO2 Credits
     PROJECTS = "Proyectos"  # -> PROJECTS
     PROJECTS_BONUS = "Bonos_Proyecto"  # -> CO2_CREDITS_PROYECTS
-    ORDER_BONUS = "Ordeners_Bonos"  # -> CO2_CREDITS_ORDERS
+    ORDER_BONUS = "Ordenes_Bonos"  # -> CO2_CREDITS_ORDERS
 
 
 class Proyects(Enum):
@@ -31,7 +31,7 @@ class CO2CreditsByProject(Enum):
 
 
 class CO2CreditsByOrders(Enum):
-    BUYERS_NAME = "Buyers Name"
+    BUYERS_NAME = "Buyer's Name"
     PURCHASE_ORDER = "Purchase Order"
     PROJECT_NAME = "Project Name"
     BONDS_PURCHASED = "Bonds Purchased"  # TODO Update to CO2 Credits Purchased
