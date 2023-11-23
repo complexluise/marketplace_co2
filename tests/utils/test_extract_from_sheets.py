@@ -9,6 +9,8 @@ from pandas import DataFrame
 from pandas.testing import assert_frame_equal
 from unittest.mock import MagicMock
 
+from utils.models import CO2CreditsByOrders, CO2CreditsByProject, Proyects
+
 # Mock DataFrame to be returned by conn.read
 mock_df_projects = DataFrame(
     {
@@ -25,20 +27,20 @@ mock_df_projects = DataFrame(
 )
 
 # Mock DataFrame for Bonos_Proyecto
-mock_df_bonos_project = DataFrame(
+mock_df_co2_credits_by_project = DataFrame(
     {
-        Proyects.PROJECT_NAME.value: ["Project X", "Project Y"],
+        CO2CreditsByProject.PROJECT_NAME.value: ["Project X", "Project Y"],
         CO2CreditsByProject.CREDITS_GENERATED.value: [100, 200],
-        CO2CreditsByProject.STATUS.value: ["Active", "Inactive"],
+        CO2CreditsByProject.STATUS_BUNDLED.value: ["Active", "Inactive"],
         # ... other columns
     }
 )
 
 # Mock DataFrame for Ordenes_Bonos
-mock_df_bonos_purchased = DataFrame(
+mock_df_co2_credits_orders = DataFrame(
     {
         CO2CreditsByOrders.BUYERS_NAME.value: ["Alice", "Bob"],
-        CO2CreditsByOrders.PRUCHASE_ORDER.value: [123, 456],
+        CO2CreditsByOrders.PURCHASE_ORDER.value: [123, 456],
         CO2CreditsByOrders.BONDS_PURCHASED.value: [10, 20],
         CO2CreditsByOrders.STATUS.value: ["Completed", "Pending"],
         # ... other columns
@@ -51,11 +53,11 @@ def mock_conn_read(mocker):
     # Mock conn.read to return the appropriate DataFrame based on the worksheet name
     def mock_read(worksheet, ttl, nrows):
         if worksheet == "Bonos_Proyecto":
-            return mock_df_bonos_project
+            return mock_df_co2_credits_by_project
         if worksheet == "Proyectos":
             return mock_df_projects
         elif worksheet == "Ordenes_Bonos":
-            return mock_df_bonos_purchased
+            return mock_df_co2_credits_orders
 
     mocker.patch.object(conn, "read", side_effect=mock_read)
 
