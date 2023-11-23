@@ -1,5 +1,6 @@
 from typing import List
 
+import pandas as pd
 from streamlit import connection
 
 from pandas import DataFrame, merge
@@ -46,6 +47,29 @@ def filter_rows_with_data(df: DataFrame, columnas_requeridas: List[str]) -> Data
     return df[df[columnas_requeridas].notna().all(axis=1)]
 
 
+def drop_row_if_any_is_negative(df: DataFrame, column_names: list) -> DataFrame:
+    """
+    This function drops any rows where any of the specified columns contain a negative value.
+    If the data in any of the columns are not numeric, it skips that column.
+
+    Parameters:
+    df (pandas.DataFrame): The dataframe from which rows are to be dropped.
+    column_names (list): The list of column names to check for negative values.
+
+    Returns:
+    pandas.DataFrame: The dataframe with rows containing negative values in any of the specified columns dropped,
+                      or the original dataframe if none of the specified columns are numeric.
+    """
+    # Iterate over the list of column names
+    for column_name in column_names:
+        # Check if the specified column exists and if the data are numeric
+        if column_name in df.columns and pd.api.types.is_numeric_dtype(df[column_name]):
+            # Drop rows where the specified column contains a negative value
+            df: DataFrame = df[df[column_name] >= 0]
+
+    return df
+
+
 def get_projects() -> DataFrame:
     """
     Retrieves project data from a Google Sheets worksheet named 'Proyectos'. # TODO CHANGE TO PROJECTS
@@ -53,7 +77,7 @@ def get_projects() -> DataFrame:
     Returns:
         DataFrame: A DataFrame containing selected columns and rows with data for projects.
     """
-    df_projects = conn.read(
+    df_projects: DataFrame = conn.read(
         worksheet=SheetsDatabase.PROJECTS.value,
         ttl=0,
         nrows=1000,
