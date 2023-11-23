@@ -88,12 +88,12 @@ def get_co2_credits_generated_by_project() -> DataFrame:
     return df_co2_credits_project.pipe(
         select_columns,
         column_start=CO2CreditsByProject.PROJECT_NAME.value,
-        column_end=CO2CreditsByProject.STATUS,
+        column_end=CO2CreditsByProject.STATUS.value,
     ).pipe(
         filter_rows_with_data,
         columnas_requeridas=[
             CO2CreditsByProject.PROJECT_NAME.value,
-            CO2CreditsByProject.CREDITS_GENERATED,
+            CO2CreditsByProject.CREDITS_GENERATED.value,
         ],
     )
 
@@ -125,7 +125,7 @@ def get_co2_credits_orders() -> DataFrame:
     )
 
 
-def get_bonos_project_enriched() -> DataFrame:
+def get_co2_credits_project_enriched() -> DataFrame:
     """
     Enriches bonos project data by merging it with the projects data.
 
@@ -133,17 +133,19 @@ def get_bonos_project_enriched() -> DataFrame:
         DataFrame: A merged DataFrame containing enriched data for bonos projects.
     """
     df_projects = get_projects()
-    df_bonos_project = get_co2_credits_generated_by_project()
+    df_co2_credits_project = get_co2_credits_generated_by_project()
 
-    return merge(df_bonos_project, df_projects, how="inner")
+    return merge(df_co2_credits_project, df_projects, how="inner")
 
 
 def get_industry_data() -> DataFrame:
-    df_bonos_enriched = get_bonos_project_enriched()
-    df_pivot_industry = df_bonos_enriched.groupby(by=Proyects.INDUSTRY.value).sum()
-    df_pivot_industry.reset_index(inplace=False)
+    df_co2_credits_project_enriched = get_co2_credits_project_enriched()
+    df_pivot_industry = df_co2_credits_project_enriched.groupby(
+        by=Proyects.INDUSTRY.value
+    ).sum()
+    df_pivot_industry.reset_index(inplace=True)
     return df_pivot_industry
 
 
 if __name__ == "__main__":
-    df = get_bonos_project_enriched()
+    df = get_co2_credits_project_enriched()
