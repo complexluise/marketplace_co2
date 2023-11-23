@@ -20,6 +20,4 @@ format_as_title("Table of CO2 Credits Purchases by Project")
 
 with st.spinner("Please wait"):
     df = get_co2_credits_generated_by_project()
-
-
-st.dataframe(df)
+    st.dataframe(df)
