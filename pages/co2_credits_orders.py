@@ -15,7 +15,7 @@ st.set_page_config(
     },
 )
 
-format_as_title("Ordenes de Bonos")
+format_as_title("CO2 Credits Orders")
 
 with st.spinner("Please wait"):
     df = get_co2_credits_orders()
