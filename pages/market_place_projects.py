@@ -1,6 +1,8 @@
 import streamlit as st
 from utils.extract_from_sheets import get_co2_credits_generated_by_project
+
 from utils.components import format_as_title
+
 
 st.set_page_config(
     page_title="Marketplace Proyects",
