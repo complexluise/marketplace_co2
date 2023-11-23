@@ -1,7 +1,10 @@
 import streamlit as st
 
+from utils.components import format_as_title
+from utils.extract_from_sheets import get_co2_credits_orders
+
 st.set_page_config(
-    page_title="Bond Orders",
+    page_title="CO2 Credits Orders",
     page_icon="🧊",
     layout="wide",
     initial_sidebar_state="collapsed",
@@ -12,4 +15,8 @@ st.set_page_config(
     },
 )
 
-st.write("Ordenes de Bonos")
+format_as_title("Ordenes de Bonos")
+
+with st.spinner("Please wait"):
+    df = get_co2_credits_orders()
+    st.dataframe(df)
