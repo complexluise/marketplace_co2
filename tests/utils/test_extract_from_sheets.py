@@ -12,10 +12,14 @@ from unittest.mock import MagicMock
 # Mock DataFrame to be returned by conn.read
 mock_df_projects = DataFrame(
     {
-        "Project Name": ["Project A", "Project B", "Project C"],
-        "Industry": ["Tech", "Health", "Finance"],
-        "Serial Header": ["001", "002", "003"],
-        "Sustainable Development Goal": ["Goal 1", "Goal 2", "Goal 3"],
+        Proyects.PROJECT_NAME.value: ["Project A", "Project B", "Project C"],
+        Proyects.INDUSTRY.value: ["Tech", "Health", "Finance"],
+        Proyects.SERIAL_HEADER.value: ["001", "002", "003"],
+        Proyects.SUSTAINABLE_DEVELOPMENT_GOAL.value: [
+            "Goal 1",
+            "Goal 2",
+            "Goal 3",
+        ],
         "Other Column": [10, 20, 30],
     }
 )
@@ -23,9 +27,9 @@ mock_df_projects = DataFrame(
 # Mock DataFrame for Bonos_Proyecto
 mock_df_bonos_project = DataFrame(
     {
-        "Project Name": ["Project X", "Project Y"],
-        "Number of Credits Generated": [100, 200],
-        "Status": ["Active", "Inactive"],
+        Proyects.PROJECT_NAME.value: ["Project X", "Project Y"],
+        CO2CreditsByProject.CREDITS_GENERATED.value: [100, 200],
+        CO2CreditsByProject.STATUS.value: ["Active", "Inactive"],
         # ... other columns
     }
 )
@@ -33,10 +37,10 @@ mock_df_bonos_project = DataFrame(
 # Mock DataFrame for Ordenes_Bonos
 mock_df_bonos_purchased = DataFrame(
     {
-        "Buyer's Name": ["Alice", "Bob"],
-        "Purchase Order": [123, 456],
-        "Bonds Purchased": [10, 20],
-        "Status": ["Completed", "Pending"],
+        CO2CreditsByOrders.BUYERS_NAME.value: ["Alice", "Bob"],
+        CO2CreditsByOrders.PRUCHASE_ORDER.value: [123, 456],
+        CO2CreditsByOrders.BONDS_PURCHASED.value: [10, 20],
+        CO2CreditsByOrders.STATUS.value: ["Completed", "Pending"],
         # ... other columns
     }
 )
@@ -63,10 +67,14 @@ def test_get_projects(mock_conn_read):
     # Expected DataFrame after processing
     expected_df = DataFrame(
         {
-            "Project Name": ["Project A", "Project B", "Project C"],
-            "Industry": ["Tech", "Health", "Finance"],
-            "Serial Header": ["001", "002", "003"],
-            "Sustainable Development Goal": ["Goal 1", "Goal 2", "Goal 3"],
+            Proyects.PROJECT_NAME.value: ["Project A", "Project B", "Project C"],
+            Proyects.INDUSTRY.value: ["Tech", "Health", "Finance"],
+            Proyects.SERIAL_HEADER.value: ["001", "002", "003"],
+            Proyects.SUSTAINABLE_DEVELOPMENT_GOAL.value: [
+                "Goal 1",
+                "Goal 2",
+                "Goal 3",
+            ],
         }
     )
 
