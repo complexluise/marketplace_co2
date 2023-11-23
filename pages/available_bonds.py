@@ -1,4 +1,7 @@
 import streamlit as st
+import plotly.express as px
+from utils.extract_from_sheets import get_industry_data
+from utils.models import Proyects, CO2CreditsByProject
 
 st.set_page_config(
     page_title="Available Bonds",
@@ -13,6 +16,16 @@ st.set_page_config(
 )
 
 st.write("Bonos disponibles")
+
+df = get_industry_data()
+fig = px.pie(
+    df,
+    values=CO2CreditsByProject.CREDITS_GENERATED.value,
+    names=Proyects.INDUSTRY.value,
+    color_discrete_sequence=px.colors.qualitative.Pastel,
+)
+
+st.plotly_chart(fig)
 
 
 def main():

@@ -7,13 +7,14 @@ from PIL import Image
 import webbrowser
 from utils.extract_from_sheets import (
     get_projects,
-    get_bonos_project,
-    get_bonos_purchased,
+    get_co2_credits_generated_by_project,
+    get_co2_credits_orders,
 )
 from geopy.geocoders import Nominatim
 import pycountry
 import re
 
+from utils.models import Proyects, CO2CreditsByProject
 
 st.set_page_config(
     page_title="Projects Detail",
@@ -39,7 +40,7 @@ def convertir_a_mayusculas(cadena):
 
 
 opcion_elegida = st.selectbox(
-    "Select the project to consulting:", df_proyectos["Project Name"]
+    "Select the project to consulting:", df_proyectos[Proyects.PROJECT_NAME.value]
 )
 
 Titulo_proy = convertir_a_mayusculas(opcion_elegida)
@@ -58,19 +59,22 @@ st.markdown(
 
 # Obtiene los datos del proyecto
 fila_seleccionada = df_proyectos.loc[
-    df_proyectos["Project Name"] == opcion_elegida, "Industry"
+    df_proyectos[Proyects.PROJECT_NAME.value] == opcion_elegida, Proyects.INDUSTRY.value
 ].iloc[0]
 Description = df_proyectos.loc[
-    df_proyectos["Project Name"] == opcion_elegida, "Description"
+    df_proyectos[Proyects.PROJECT_NAME.value] == opcion_elegida,
+    Proyects.DESCRIPTION.value,
 ].iloc[0]
 En = df_proyectos.loc[
-    df_proyectos["Project Name"] == opcion_elegida, "Serial Header"
+    df_proyectos[Proyects.PROJECT_NAME.value] == opcion_elegida,
+    Proyects.SERIAL_HEADER.value,
 ].iloc[0]
 Location = df_proyectos.loc[
-    df_proyectos["Project Name"] == opcion_elegida, "Location"
+    df_proyectos[Proyects.PROJECT_NAME.value] == opcion_elegida, Proyects.LOCATION.value
 ].iloc[0]
 sdgs_table = df_proyectos.loc[
-    df_proyectos["Project Name"] == opcion_elegida, "Sustainable Development Goal"
+    df_proyectos[Proyects.PROJECT_NAME.value] == opcion_elegida,
+    Proyects.SUSTAINABLE_DEVELOPMENT_GOAL.value,
 ].iloc[0]
 
 
@@ -108,17 +112,18 @@ except (AttributeError, KeyError):
 col1, col2, col3, col4 = st.columns(4)
 
 # Obtemción de información del google sheets+
-df_bonos_proyecto = get_bonos_project()
-df_ordenes_compra = get_bonos_purchased()
+df_bonos_proyecto = get_co2_credits_generated_by_project()
+df_ordenes_compra = get_co2_credits_orders()
 
 
 # Metodologia y bonos generados
 vcs = df_bonos_proyecto.loc[
-    df_bonos_proyecto["Project Name"] == opcion_elegida, "Methodology"
+    df_bonos_proyecto[Proyects.PROJECT_NAME.value] == opcion_elegida,
+    CO2CreditsByProject.METHODOLOGY.value,
 ].iloc[0]
 bonos_generados = df_bonos_proyecto.loc[
-    df_bonos_proyecto["Project Name"] == opcion_elegida,
-    "Number of Credits Generated",
+    df_bonos_proyecto[Proyects.PROJECT_NAME.value] == opcion_elegida,
+    CO2CreditsByProject.CREDITS_GENERATED.value,
 ].iloc[0]
 
 with col1:
@@ -167,7 +172,7 @@ with col1:
 
     st.info(f"**{coo}**: {Location}")
 
-    Proyecto = "Project Name"
+    Proyecto = Proyects.PROJECT_NAME.value
     st.info(f"**{Proyecto}**: {opcion_elegida}")
 
     #
@@ -206,36 +211,41 @@ titulo_html = f"<h1 style='text-align: center; color: #001f3f; font-size: {taman
 st.markdown(titulo_html, unsafe_allow_html=True)
 
 prov = df_bonos_proyecto.loc[
-    df_bonos_proyecto["Project Name"] == opcion_elegida,
-    "Provider (Legal Representative of the Project)",
+    df_bonos_proyecto[Proyects.PROJECT_NAME.value] == opcion_elegida,
+    CO2CreditsByProject.PROVIDER.value,
 ].iloc[0]
 entity = df_bonos_proyecto.loc[
-    df_bonos_proyecto["Project Name"] == opcion_elegida, "Verifying Entity"
+    df_bonos_proyecto[Proyects.PROJECT_NAME.value] == opcion_elegida,
+    CO2CreditsByProject.VERIFYING_ENTITY.value,
 ].iloc[0]
 g_b = df_bonos_proyecto.loc[
-    df_bonos_proyecto["Project Name"] == opcion_elegida,
-    "Number of Credits Generated",
+    df_bonos_proyecto[Proyects.PROJECT_NAME.value] == opcion_elegida,
+    CO2CreditsByProject.CREDITS_GENERATED.value,
 ].iloc[0]
 b_p = df_bonos_proyecto.loc[
-    df_bonos_proyecto["Project Name"] == opcion_elegida, "Credits in Packages"
+    df_bonos_proyecto[Proyects.PROJECT_NAME.value] == opcion_elegida,
+    CO2CreditsByProject.CREDITS_IN_PACKAGES.value,
 ].iloc[0]
 b_d = df_bonos_proyecto.loc[
-    df_bonos_proyecto["Project Name"] == opcion_elegida, "Available Credits"
+    df_bonos_proyecto[Proyects.PROJECT_NAME.value] == opcion_elegida,
+    CO2CreditsByProject.AVAILABLE_CREDITS.value,
 ].iloc[0]
 n_s = df_bonos_proyecto.loc[
-    df_bonos_proyecto["Project Name"] == opcion_elegida, "Serial Number of Credits"
+    df_bonos_proyecto[Proyects.PROJECT_NAME.value] == opcion_elegida,
+    CO2CreditsByProject.SERIAL_NUMBER_CREDITS.value,
 ].iloc[0]
 stt = df_bonos_proyecto.loc[
-    df_bonos_proyecto["Project Name"] == opcion_elegida, "Status"
+    df_bonos_proyecto[Proyects.PROJECT_NAME.value] == opcion_elegida,
+    CO2CreditsByProject.STATUS.value,
 ].iloc[0]
 
-Localizacion_proyecto = "Provider"
+Localizacion_proyecto = CO2CreditsByProject.PROVIDER.value
 st.info(f"**{Localizacion_proyecto}**: {country_name}")
 
 Industria_tipo = "Verification Entity"
 st.info(f"**{Industria_tipo}**: {entity}")
 
-sdg_proyecto = "Methodology"
+sdg_proyecto = CO2CreditsByProject.METHODOLOGY.value
 st.info(f"**{sdg_proyecto}**: {vcs}")
 
 generated_bones = "Generated bonds"
@@ -250,7 +260,7 @@ st.info(f"**{available}**: {b_d}")
 ser = "Serial Number"
 st.info(f"**{ser}**: {n_s}")
 
-status_type = "Status"
+status_type = CO2CreditsByProject.STATUS.value
 st.info(f"**{status_type}**: {stt}")
 
 title_sdg = convertir_a_mayusculas("Sustainable development goals")
