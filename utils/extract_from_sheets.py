@@ -48,7 +48,7 @@ def filter_rows_with_data(df: DataFrame, columnas_requeridas: List[str]) -> Data
 
 def get_projects() -> DataFrame:
     """
-    Retrieves project data from a Google Sheets worksheet named 'Proyectos'. # TODO CHANGE TO PROJECTS
+    Retrieves project data from a Google Sheets worksheet named 'PROJECTS'.
 
     Returns:
         DataFrame: A DataFrame containing selected columns and rows with data for projects.
@@ -75,20 +75,20 @@ def get_projects() -> DataFrame:
 
 def get_co2_credits_generated_by_project() -> DataFrame:
     """
-    Retrieves data from a Google Sheets worksheet named 'Bonos_Proyecto'. # TODO CHANGE TO CO2_CREDITS_PROYECTS
+    Retrieves data from a Google Sheets worksheet named 'CO2_CREDITS_PROYECTS'.
 
     Returns:
         DataFrame: A DataFrame containing selected columns and rows with data for bonos projects.
     """
     df_co2_credits_project = conn.read(
-        worksheet=SheetsDatabase.PROJECTS_BONUS.value,
+        worksheet=SheetsDatabase.CO2_CREDITS_PROYECTS.value,
         ttl=0,
         nrows=1000,
     )
     return df_co2_credits_project.pipe(
         select_columns,
         column_start=CO2CreditsByProject.PROJECT_NAME.value,
-        column_end=CO2CreditsByProject.STATUS.value,
+        column_end=CO2CreditsByProject.STATUS_BUNDLED.value,
     ).pipe(
         filter_rows_with_data,
         columnas_requeridas=[
@@ -100,13 +100,13 @@ def get_co2_credits_generated_by_project() -> DataFrame:
 
 def get_co2_credits_orders() -> DataFrame:
     """
-    Retrieves data from a Google Sheets worksheet named 'Ordenes_Bonos'. # TODO CHANGE TO CO2_CREDITS_ORDERS
+    Retrieves data from a Google Sheets worksheet named 'CO2_CREDITS_ORDERS'.
 
     Returns:
         DataFrame: A DataFrame containing selected columns and rows with data for purchased bonos.
     """
     df_co2_credits_orders = conn.read(
-        worksheet=SheetsDatabase.ORDER_BONUS.value,
+        worksheet=SheetsDatabase.CO2_CREDITS_ORDERS.value,
         ttl=0,
         nrows=1000,
     )
@@ -142,7 +142,7 @@ def get_industry_data() -> DataFrame:
     df_co2_credits_project_enriched = get_co2_credits_project_enriched()
     df_pivot_industry = df_co2_credits_project_enriched.groupby(
         by=Proyects.INDUSTRY.value
-    ).sum()
+    ).sum(CO2CreditsByProject.AVAILABLE_CO2_CREDITS.value)
     df_pivot_industry.reset_index(inplace=True)
     return df_pivot_industry
 
