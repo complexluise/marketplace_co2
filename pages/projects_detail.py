@@ -37,18 +37,20 @@ df_proyectos = df_proyectos.iloc[:-1]
 def convertir_a_mayusculas(cadena):
     return cadena.upper()
 
-
+#Selectbox para elegir el proyecto a consultar
 opcion_elegida = st.selectbox(
     "Select the project to consulting:", df_proyectos["Project Name"]
 )
 
 Titulo_proy = convertir_a_mayusculas(opcion_elegida)
+Color_verdeoscuro = "{Color_verdeoscuro}"
 
-st.markdown("<h1 style='text-align: center; color: #576F57;; font-size: 16px;'>Netzeo2</h1>", unsafe_allow_html=True)
+
+st.markdown(f"<h1 style='text-align: center; color: {Color_verdeoscuro};; font-size: 16px;'>Netzeo2</h1>", unsafe_allow_html=True)
 
 # Título centrado de color verde y tamaño grande
 
-st.markdown(f"<h1 style='text-align: center; color: #576F57;; font-size: 64px;'>{Titulo_proy}</h1>", unsafe_allow_html=True)
+st.markdown(f"<h1 style='text-align: center; color: {Color_verdeoscuro};; font-size: 64px;'>{Titulo_proy}</h1>", unsafe_allow_html=True)
 
 # Obtiene los datos del proyecto
 fila_seleccionada = df_proyectos.loc[
@@ -67,7 +69,7 @@ sdgs_table = df_proyectos.loc[
     df_proyectos["Project Name"] == opcion_elegida, "Sustainable Development Goal"
 ].iloc[0]
 
-
+#Función para convertir coordenadas en texto a una tuple (,)
 def convertir_a_tupla(coordenadas_str):
     """Convierte la cadena str de location a valores numericos"""
     try:
@@ -77,13 +79,12 @@ def convertir_a_tupla(coordenadas_str):
         return None
 
 
-# Ejemplo de uso: (40.7128, -74.0060)
+#Conversión de textp a tupla
 input_text = Location
 coordinates_transformed = convertir_a_tupla(input_text)
 
 
-print(coordinates_transformed)
-
+#Funciones para obtener información de las coordenadas
 geolocator = Nominatim(user_agent="app")
 location = geolocator.reverse(coordinates_transformed)
 
@@ -107,7 +108,7 @@ df_ordenes_compra = get_bonos_purchased()
 
 
 # Metodologia y bonos generados
-vcs = df_bonos_proyecto.loc[
+Metodologias = df_bonos_proyecto.loc[
     df_bonos_proyecto["Project Name"] == opcion_elegida, "Methodology"
 ].iloc[0]
 bonos_generados = df_bonos_proyecto.loc[
@@ -118,7 +119,7 @@ bonos_generados = df_bonos_proyecto.loc[
 
 
 with col1:
-    image5 = Image.open("images/obj/f5.JPG")
+    image5 = Image.open("images/obj/f5.JPG") #Imagen de la ubicación
     image5 = image5.resize((800, 600))
     with st.columns(3)[1]:
         st.image(image5)
@@ -127,7 +128,7 @@ with col1:
     st.markdown(f"<p style='text-align: center;'>{country_name}</p>", unsafe_allow_html=True)
 
 with col2:
-    image6 = Image.open("images/obj/f6.JPG")
+    image6 = Image.open("images/obj/f6.JPG") #Imagen planta, tipo de industría
     image6 = image6.resize((800, 600))
     with st.columns(3)[1]:
         st.image(image6)
@@ -135,102 +136,93 @@ with col2:
     st.markdown(f"<p style='text-align: center;'>{fila_seleccionada}</p>", unsafe_allow_html=True)
 
 with col3:
-    image7 = Image.open("images/obj/f7.JPG")
+    image7 = Image.open("images/obj/f7.JPG") #Imagen metodología
     image7 = image7.resize((800, 600))
     with st.columns(3)[1]:
         st.image(image7)
     st.markdown("<p style='text-align: center;'><strong>Methodology:</strong></p>", unsafe_allow_html=True)
-    st.markdown(f"<p style='text-align: center;'>{vcs}</p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='text-align: center;'>{Metodologias}</p>", unsafe_allow_html=True)
 
 
 with col4:
-    image8 = Image.open("images/obj/f8.JPG")
+    image8 = Image.open("images/obj/f8.JPG") #Imagen creditos, carro de compra
     image8 = image8.resize((800, 600))
     with st.columns(3)[1]:
         st.image(image8)
     st.markdown("<p style='text-align: center;'><strong>Generated CO2 credits:</strong></p>", unsafe_allow_html=True)
-    st.markdown(f"<p style='text-align: center;'>{bonos_generados}</p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='text-align: center;'>{int(bonos_generados)}</p>", unsafe_allow_html=True)
 
 
 
-image9 = Image.open("images/obj/f9.JPG")
+image9 = Image.open("images/obj/f9.JPG") #Imagen de turbinas eloicas
 
 
-image9 = image9.resize((1200, 400))
+image9 = image9.resize((1250, 480))
 st.image(image9)
 
 st.divider()
 
 col1, col2 = st.columns(2)
 
+# Función para generar barra con dos cadenas de texto
+def barra(a,b):
+    st.info(f"**{a}**: {b}")
+
 with col1:
     
     tamaño_letra = 40
-    titulo_html = f"<h1 style='text-align: center; color: #576F57; font-size: {tamaño_letra}px;'>About</h1>"
-    st.markdown(titulo_html, unsafe_allow_html=True)
+    About = f"<h1 style='text-align: center; color: {Color_verdeoscuro}; font-size: {tamaño_letra}px;'>About</h1>"
+    st.markdown(About, unsafe_allow_html=True)
 
     st.write("Description of projects: ", Description)
 
-    if opcion_elegida != "Parque Eólico Costa Azul":
-        # TODO Esto deberia ser más general porque pueden existir proyectos diferentes a Costa Azul que cumplen esta misma condición
-        geolocator = Nominatim(user_agent="app")
-        location = geolocator.reverse(coordinates_transformed)
+    #Funciones para la app
+    geolocator = Nominatim(user_agent="app")
+    location = geolocator.reverse(coordinates_transformed)
+    #Variable vacia 
+    Empty = ""
+    if country_code != Empty:
         country_code = location.raw["address"]["country_code"]
         country_name = pycountry.countries.get(alpha_2=country_code).name
     else:
         location = coordinates_transformed
         country_name = coordinates_transformed
 
+    #if opcion_elegida != "Parque Eólico Costa Azul":
+        # TODO Esto deberia ser más general porque pueden existir proyectos diferentes a Costa Azul que cumplen esta misma condición
+     #   geolocator = Nominatim(user_agent="app")
+     #   location = geolocator.reverse(coordinates_transformed)
+     #   country_code = location.raw["address"]["country_code"]
+    #    country_name = pycountry.countries.get(alpha_2=country_code).name
+  #  else:
+    #    location = coordinates_transformed
+    #    country_name = coordinates_transformed
+
+
     coo = "Coordinates"
     Pais = "Country" 
+    
+    Proyecto = "Project Name"
+    barra(Proyecto,opcion_elegida)
 
-    cols1,cols2=st.columns(2)
-
-    with cols1:
-        st.info(f"**{coo}**:")
-    with cols2:
-        st.info(f"{Location}")
-
-    with cols1:
-        Proyecto = "Project Name"
-        st.info(f"**{Proyecto}**:")
-    with cols2:
-        st.info(f"{opcion_elegida}")
-
-
-    #
-    if opcion_elegida != "Parque Eólico Costa Azul":
+    if country_code != Empty:
         Localizacion_proyecto = "Location Project"
-        with cols1:
-            st.info(f"**{Localizacion_proyecto}**:")
-        with cols2:
-            st.info(f"{country_name}")
+        barra(Localizacion_proyecto,country_name)
+   
 
     Industria_tipo = "Industry Type"
-    with cols1:
-        st.info(f"**{Industria_tipo}**:")
-    with cols2:
-        st.info(f"{fila_seleccionada}")
+    barra(Industria_tipo,fila_seleccionada)
 
 
     sdg_proyecto = "List SDG"
-    with cols1:
-        st.info(f"**{sdg_proyecto}**:")
-    with cols2:
-        st.info(f"{sdgs_table}")
-
-    Encabezado = "Serial"
-    with cols1:
-        st.info(f"**{Encabezado}**:")
-    with cols2:
-        st.info(f"{En}")
+    barra(sdg_proyecto,sdgs_table)
 
 
 # Agregar contenido a la segunda columna
 with col2:
     tamaño_letra = 40
-    titulo_html = f"<h1 style='text-align: center; color: #576F57; font-size: {tamaño_letra}px;'>Mapa of {country_name}</h1>"
-    st.markdown(titulo_html, unsafe_allow_html=True)
+    Titulo_mapa = f"<h1 style='text-align: center; color: #576F57; font-size: {tamaño_letra}px;'>Mapa of {country_name}</h1>"
+    st.markdown(Titulo_mapa, unsafe_allow_html=True)
 
     ct_coordinates = coordinates_transformed
 
@@ -244,8 +236,8 @@ with col2:
 st.divider()
 
 tamaño_letra = 50
-titulo_html = f"<h1 style='text-align: center; color: #576F57; font-size: {tamaño_letra}px;'>More information</h1>"
-st.markdown(titulo_html, unsafe_allow_html=True)
+Mas_informacion = f"<h1 style='text-align: center; color: #576F57; font-size: {tamaño_letra}px;'>More information</h1>"
+st.markdown(Mas_informacion, unsafe_allow_html=True)
 
 prov = df_bonos_proyecto.loc[
     df_bonos_proyecto["Project Name"] == opcion_elegida,
@@ -271,29 +263,31 @@ stt = df_bonos_proyecto.loc[
     df_bonos_proyecto["Project Name"] == opcion_elegida, "Status"
 ].iloc[0]
 
+
+
 Localizacion_proyecto = "Provider"
-st.info(f"**{Localizacion_proyecto}**: {country_name}")
+barra(Localizacion_proyecto,country_name)
 
 Industria_tipo = "Verification Entity"
-st.info(f"**{Industria_tipo}**: {entity}")
+barra(Industria_tipo,entity)
 
 sdg_proyecto = "Methodology"
-st.info(f"**{sdg_proyecto}**: {vcs}")
+barra(sdg_proyecto,Metodologias)
 
-generated_bones = "Generated bonds"
-st.info(f"**{generated_bones}**: {g_b}")
+generated_bones = "Generated CO2 Credits"
+barra(generated_bones,int(g_b))
 
-bones_pk = "Bonds in a Package"
-st.info(f"**{bones_pk}**: {b_p}")
+bones_pk = "CO2 Credits in a Package"
+barra(bones_pk,int(b_p))
 
-available = "Available Bonds"
-st.info(f"**{available}**: {b_d}")
+available = "Available CO2 Credits"
+barra(available,int(b_d))
 
 ser = "Serial Number"
-st.info(f"**{ser}**: {n_s}")
+barra(ser,n_s)
 
 status_type = "Status"
-st.info(f"**{status_type}**: {stt}")
+barra(status_type,stt)
 
 st.divider()
 
@@ -301,14 +295,14 @@ title_sdg = convertir_a_mayusculas("Sustainable development goals")
 
 st.markdown(f"<h1 style='text-align: center; color: #576F57;'>{title_sdg}</h1>", unsafe_allow_html=True)
 
-texto_html = """
+TextSDG = """
     <div style='text-align: center; font-size: 24px;'>
         <p style='text-align: justify;'>
             The 2030 Agenda for Sustainable Development, adopted by all United Nations Member States in 2015, provides a shared blueprint for peace and prosperity for people and the planet, now and into the future. At its heart are the 17 Sustainable Development Goals (SDGs), which are an urgent call for action by all countries - developed and developing - in a global partnership. They recognize that ending poverty and other deprivations must go hand-in-hand with strategies that improve health and education, reduce inequality, and spur economic growth – all while tackling climate change and working to preserve our oceans and forests.
         </p>
     </div>
 """
-st.markdown(texto_html, unsafe_allow_html=True)
+st.markdown(TextSDG, unsafe_allow_html=True)
 
 url = "https://sdgs.un.org/goals"
 if st.button("Learn more about the Sustainable Development Goals."):
@@ -317,6 +311,7 @@ if st.button("Learn more about the Sustainable Development Goals."):
 
 col1, col2, col3, col4, col5, col6 = st.columns(6)
 
+# Imagenes de todos los sdg
 obj1 = Image.open("images/sdg/1.JPG")
 obj2 = Image.open("images/sdg/2.JPG")
 obj3 = Image.open("images/sdg/3.JPG")
@@ -385,3 +380,19 @@ with col6:
     st.image(obj16)
     st.image(obj17)
     st.image(obj18)
+
+def mostrar_imagenes_por_columna(vector):
+    # Interfaz de usuario
+    
+
+    # Crear columnas según la longitud del vector
+    columns = st.columns(len(vector))
+    
+
+    # Mostrar imágenes en cada columna
+    for i, col in enumerate(columns):
+        imagen_numero = vector[i]
+        col.image(f"images/sdg/{imagen_numero}.JPG", use_column_width=True)
+
+    
+mostrar_imagenes_por_columna(numeros_encontrados)
