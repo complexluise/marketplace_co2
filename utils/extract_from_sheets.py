@@ -1,9 +1,18 @@
 from typing import List
 
+import pandas as pd
 from streamlit import connection
 
 from pandas import DataFrame, merge
 from streamlit_gsheets import GSheetsConnection
+
+from utils.models import (
+    Proyects,
+    CO2CreditsByProject,
+    CO2CreditsByOrders,
+    SheetsDatabase,
+)
+
 
 # Create a connection object.
 conn = connection("gsheets", type=GSheetsConnection)
@@ -38,83 +47,109 @@ def filter_rows_with_data(df: DataFrame, columnas_requeridas: List[str]) -> Data
     return df[df[columnas_requeridas].notna().all(axis=1)]
 
 
+def drop_row_if_any_is_negative(df: DataFrame, column_names: list) -> DataFrame:
+    """
+    This function drops any rows where any of the specified columns contain a negative value.
+    If the data in any of the columns are not numeric, it skips that column.
+
+    Parameters:
+    df (pandas.DataFrame): The dataframe from which rows are to be dropped.
+    column_names (list): The list of column names to check for negative values.
+
+    Returns:
+    pandas.DataFrame: The dataframe with rows containing negative values in any of the specified columns dropped,
+                      or the original dataframe if none of the specified columns are numeric.
+    """
+    # Iterate over the list of column names
+    for column_name in column_names:
+        # Check if the specified column exists and if the data are numeric
+        if column_name in df.columns and pd.api.types.is_numeric_dtype(df[column_name]):
+            # Drop rows where the specified column contains a negative value
+            df: DataFrame = df[df[column_name] >= 0]
+
+    return df
+
+
 def get_projects() -> DataFrame:
     """
-    Retrieves project data from a Google Sheets worksheet named 'Proyectos'.
+    Retrieves project data from a Google Sheets worksheet named 'PROJECTS'.
 
     Returns:
         DataFrame: A DataFrame containing selected columns and rows with data for projects.
     """
-    df_projects = conn.read(
-        worksheet="Proyectos",
+    df_projects: DataFrame = conn.read(
+        worksheet=SheetsDatabase.PROJECTS.value,
         ttl=0,
         nrows=1000,
     )
 
     return df_projects.pipe(
         select_columns,
-        column_start="Project Name",
-        column_end="Sustainable Development Goal",
+        column_start=Proyects.PROJECT_NAME.value,
+        column_end=Proyects.SUSTAINABLE_DEVELOPMENT_GOAL.value,
     ).pipe(
         filter_rows_with_data,
         columnas_requeridas=[
-            "Project Name",
-            "Industry",
-            "Serial Header",
+            Proyects.PROJECT_NAME.value,
+            Proyects.INDUSTRY.value,
+            Proyects.SERIAL_HEADER.value,
         ],
     )
 
 
-def get_bonos_project() -> DataFrame:
+def get_co2_credits_generated_by_project() -> DataFrame:
     """
-    Retrieves data from a Google Sheets worksheet named 'Bonos_Proyecto'.
+    Retrieves data from a Google Sheets worksheet named 'CO2_CREDITS_PROYECTS'.
 
     Returns:
         DataFrame: A DataFrame containing selected columns and rows with data for bonos projects.
     """
-    df_bonos_project = conn.read(
-        worksheet="Bonos_Proyecto",
+    df_co2_credits_project = conn.read(
+        worksheet=SheetsDatabase.CO2_CREDITS_PROYECTS.value,
         ttl=0,
         nrows=1000,
     )
-    return df_bonos_project.pipe(
+    return df_co2_credits_project.pipe(
         select_columns,
-        column_start="Project Name",
-        column_end="Status",
-    ).pipe(
-        filter_rows_with_data,
-        columnas_requeridas=["Project Name", "Number of Credits Generated"],
-    )
-
-
-def get_bonos_purchased() -> DataFrame:
-    """
-    Retrieves data from a Google Sheets worksheet named 'Ordenes_Bonos'.
-
-    Returns:
-        DataFrame: A DataFrame containing selected columns and rows with data for purchased bonos.
-    """
-    df_bonos_purchased = conn.read(
-        worksheet="Ordenes_Bonos",
-        ttl=0,
-        nrows=1000,
-    )
-    return df_bonos_purchased.pipe(
-        select_columns,
-        column_start="Buyer's Name",
-        column_end="Compensation Description",
+        column_start=CO2CreditsByProject.PROJECT_NAME.value,
+        column_end=CO2CreditsByProject.STATUS_BUNDLED.value,
     ).pipe(
         filter_rows_with_data,
         columnas_requeridas=[
-            "Buyer's Name",
-            "Purchase Order",
-            "Bonds Purchased",
-            "Status",
+            CO2CreditsByProject.PROJECT_NAME.value,
+            CO2CreditsByProject.CREDITS_GENERATED.value,
         ],
     )
 
 
-def get_bonos_project_enriched() -> DataFrame:
+def get_co2_credits_orders() -> DataFrame:
+    """
+    Retrieves data from a Google Sheets worksheet named 'CO2_CREDITS_ORDERS'.
+
+    Returns:
+        DataFrame: A DataFrame containing selected columns and rows with data for purchased bonos.
+    """
+    df_co2_credits_orders = conn.read(
+        worksheet=SheetsDatabase.CO2_CREDITS_ORDERS.value,
+        ttl=0,
+        nrows=1000,
+    )
+    return df_co2_credits_orders.pipe(
+        select_columns,
+        column_start=CO2CreditsByOrders.BUYERS_NAME.value,
+        column_end=CO2CreditsByOrders.COMPENSATION_DESCRIPTION.value,
+    ).pipe(
+        filter_rows_with_data,
+        columnas_requeridas=[
+            CO2CreditsByOrders.BUYERS_NAME.value,
+            CO2CreditsByOrders.PURCHASE_ORDER.value,
+            CO2CreditsByOrders.BONDS_PURCHASED.value,
+            CO2CreditsByOrders.STATUS.value,
+        ],
+    )
+
+
+def get_co2_credits_project_enriched() -> DataFrame:
     """
     Enriches bonos project data by merging it with the projects data.
 
@@ -122,10 +157,19 @@ def get_bonos_project_enriched() -> DataFrame:
         DataFrame: A merged DataFrame containing enriched data for bonos projects.
     """
     df_projects = get_projects()
-    df_bonos_project = get_bonos_project()
+    df_co2_credits_project = get_co2_credits_generated_by_project()
 
-    return merge(df_bonos_project, df_projects, how="inner")
+    return merge(df_co2_credits_project, df_projects, how="inner")
+
+
+def get_industry_data() -> DataFrame:
+    df_co2_credits_project_enriched = get_co2_credits_project_enriched()
+    df_pivot_industry = df_co2_credits_project_enriched.groupby(
+        by=Proyects.INDUSTRY.value
+    ).sum(CO2CreditsByProject.AVAILABLE_CO2_CREDITS.value)
+    df_pivot_industry.reset_index(inplace=True)
+    return df_pivot_industry
 
 
 if __name__ == "__main__":
-    df = get_bonos_project_enriched()
+    df = get_co2_credits_project_enriched()

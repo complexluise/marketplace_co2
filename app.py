@@ -1,7 +1,3 @@
-import streamlit as st
+from utils.components import format_as_title
 
-from utils.extract_from_sheets import get_bonos_purchased
-
-df = get_bonos_purchased()
-
-st.dataframe(df)
+format_as_title("Marketplace NetZeo2")

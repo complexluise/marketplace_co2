@@ -9,34 +9,40 @@ from pandas import DataFrame
 from pandas.testing import assert_frame_equal
 from unittest.mock import MagicMock
 
+from utils.models import CO2CreditsByOrders, CO2CreditsByProject, Proyects
+
 # Mock DataFrame to be returned by conn.read
 mock_df_projects = DataFrame(
     {
-        "Project Name": ["Project A", "Project B", "Project C"],
-        "Industry": ["Tech", "Health", "Finance"],
-        "Serial Header": ["001", "002", "003"],
-        "Sustainable Development Goal": ["Goal 1", "Goal 2", "Goal 3"],
+        Proyects.PROJECT_NAME.value: ["Project A", "Project B", "Project C"],
+        Proyects.INDUSTRY.value: ["Tech", "Health", "Finance"],
+        Proyects.SERIAL_HEADER.value: ["001", "002", "003"],
+        Proyects.SUSTAINABLE_DEVELOPMENT_GOAL.value: [
+            "Goal 1",
+            "Goal 2",
+            "Goal 3",
+        ],
         "Other Column": [10, 20, 30],
     }
 )
 
 # Mock DataFrame for Bonos_Proyecto
-mock_df_bonos_project = DataFrame(
+mock_df_co2_credits_by_project = DataFrame(
     {
-        "Project Name": ["Project X", "Project Y"],
-        "Number of Credits Generated": [100, 200],
-        "Status": ["Active", "Inactive"],
+        CO2CreditsByProject.PROJECT_NAME.value: ["Project X", "Project Y"],
+        CO2CreditsByProject.CREDITS_GENERATED.value: [100, 200],
+        CO2CreditsByProject.STATUS_BUNDLED.value: ["Active", "Inactive"],
         # ... other columns
     }
 )
 
 # Mock DataFrame for Ordenes_Bonos
-mock_df_bonos_purchased = DataFrame(
+mock_df_co2_credits_orders = DataFrame(
     {
-        "Buyer's Name": ["Alice", "Bob"],
-        "Purchase Order": [123, 456],
-        "Bonds Purchased": [10, 20],
-        "Status": ["Completed", "Pending"],
+        CO2CreditsByOrders.BUYERS_NAME.value: ["Alice", "Bob"],
+        CO2CreditsByOrders.PURCHASE_ORDER.value: [123, 456],
+        CO2CreditsByOrders.BONDS_PURCHASED.value: [10, 20],
+        CO2CreditsByOrders.STATUS.value: ["Completed", "Pending"],
         # ... other columns
     }
 )
@@ -47,11 +53,11 @@ def mock_conn_read(mocker):
     # Mock conn.read to return the appropriate DataFrame based on the worksheet name
     def mock_read(worksheet, ttl, nrows):
         if worksheet == "Bonos_Proyecto":
-            return mock_df_bonos_project
+            return mock_df_co2_credits_by_project
         if worksheet == "Proyectos":
             return mock_df_projects
         elif worksheet == "Ordenes_Bonos":
-            return mock_df_bonos_purchased
+            return mock_df_co2_credits_orders
 
     mocker.patch.object(conn, "read", side_effect=mock_read)
 
@@ -63,10 +69,14 @@ def test_get_projects(mock_conn_read):
     # Expected DataFrame after processing
     expected_df = DataFrame(
         {
-            "Project Name": ["Project A", "Project B", "Project C"],
-            "Industry": ["Tech", "Health", "Finance"],
-            "Serial Header": ["001", "002", "003"],
-            "Sustainable Development Goal": ["Goal 1", "Goal 2", "Goal 3"],
+            Proyects.PROJECT_NAME.value: ["Project A", "Project B", "Project C"],
+            Proyects.INDUSTRY.value: ["Tech", "Health", "Finance"],
+            Proyects.SERIAL_HEADER.value: ["001", "002", "003"],
+            Proyects.SUSTAINABLE_DEVELOPMENT_GOAL.value: [
+                "Goal 1",
+                "Goal 2",
+                "Goal 3",
+            ],
         }
     )
 

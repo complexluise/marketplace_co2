@@ -7,13 +7,15 @@ from PIL import Image
 import webbrowser
 from utils.extract_from_sheets import (
     get_projects,
-    get_bonos_project,
-    get_bonos_purchased,
+    get_co2_credits_generated_by_project,
+    get_co2_credits_orders,
 )
 from geopy.geocoders import Nominatim
 import pycountry
 import re
 
+from utils.components import format_as_title
+from utils.models import Proyects, CO2CreditsByProject
 
 st.set_page_config(
     page_title="Projects Detail",
@@ -38,35 +40,35 @@ def convertir_a_mayusculas(cadena):
     return cadena.upper()
 
 #Selectbox para elegir el proyecto a consultar
-opcion_elegida = st.selectbox(
-    "Select the project to consulting:", df_proyectos["Project Name"]
-)
+with st.spinner("Please wait"):
+    opcion_elegida = st.selectbox(
+        "Select the project to consulting:", df_proyectos[Proyects.PROJECT_NAME.value]
+    )
 
-Titulo_proy = convertir_a_mayusculas(opcion_elegida)
-Color_verdeoscuro = "{Color_verdeoscuro}"
+    Titulo_proy = convertir_a_mayusculas(opcion_elegida)
+    Color_verdeoscuro = "{Color_verdeoscuro}"
 
-
-st.markdown(f"<h1 style='text-align: center; color: {Color_verdeoscuro};; font-size: 16px;'>Netzeo2</h1>", unsafe_allow_html=True)
-
-# Título centrado de color verde y tamaño grande
-
-st.markdown(f"<h1 style='text-align: center; color: {Color_verdeoscuro};; font-size: 64px;'>{Titulo_proy}</h1>", unsafe_allow_html=True)
+    format_as_title("NETZEO2")
+    format_as_title(Titulo_proy)
 
 # Obtiene los datos del proyecto
 fila_seleccionada = df_proyectos.loc[
-    df_proyectos["Project Name"] == opcion_elegida, "Industry"
+    df_proyectos[Proyects.PROJECT_NAME.value] == opcion_elegida, Proyects.INDUSTRY.value
 ].iloc[0]
 Description = df_proyectos.loc[
-    df_proyectos["Project Name"] == opcion_elegida, "Description"
+    df_proyectos[Proyects.PROJECT_NAME.value] == opcion_elegida,
+    Proyects.DESCRIPTION.value,
 ].iloc[0]
 En = df_proyectos.loc[
-    df_proyectos["Project Name"] == opcion_elegida, "Serial Header"
+    df_proyectos[Proyects.PROJECT_NAME.value] == opcion_elegida,
+    Proyects.SERIAL_HEADER.value,
 ].iloc[0]
 Location = df_proyectos.loc[
-    df_proyectos["Project Name"] == opcion_elegida, "Location"
+    df_proyectos[Proyects.PROJECT_NAME.value] == opcion_elegida, Proyects.LOCATION.value
 ].iloc[0]
 sdgs_table = df_proyectos.loc[
-    df_proyectos["Project Name"] == opcion_elegida, "Sustainable Development Goal"
+    df_proyectos[Proyects.PROJECT_NAME.value] == opcion_elegida,
+    Proyects.SUSTAINABLE_DEVELOPMENT_GOAL.value,
 ].iloc[0]
 
 #Función para convertir coordenadas en texto a una tuple (,)
@@ -103,17 +105,18 @@ except (AttributeError, KeyError):
 col1, col2, col3, col4 = st.columns(4)
 
 # Obtemción de información del google sheets+
-df_bonos_proyecto = get_bonos_project()
-df_ordenes_compra = get_bonos_purchased()
+df_bonos_proyecto = get_co2_credits_generated_by_project()
+df_ordenes_compra = get_co2_credits_orders()
 
 
 # Metodologia y bonos generados
 Metodologias = df_bonos_proyecto.loc[
-    df_bonos_proyecto["Project Name"] == opcion_elegida, "Methodology"
+    df_bonos_proyecto[Proyects.PROJECT_NAME.value] == opcion_elegida,
+    CO2CreditsByProject.METHODOLOGY.value,
 ].iloc[0]
 bonos_generados = df_bonos_proyecto.loc[
-    df_bonos_proyecto["Project Name"] == opcion_elegida,
-    "Number of Credits Generated",
+    df_bonos_proyecto[Proyects.PROJECT_NAME.value] == opcion_elegida,
+    CO2CreditsByProject.CREDITS_GENERATED.value,
 ].iloc[0]
 
 
@@ -169,7 +172,7 @@ def barra(a,b):
     st.info(f"**{a}**: {b}")
 
 with col1:
-    
+
     tamaño_letra = 40
     About = f"<h1 style='text-align: center; color: {Color_verdeoscuro}; font-size: {tamaño_letra}px;'>About</h1>"
     st.markdown(About, unsafe_allow_html=True)
@@ -179,7 +182,7 @@ with col1:
     #Funciones para la app
     geolocator = Nominatim(user_agent="app")
     location = geolocator.reverse(coordinates_transformed)
-    #Variable vacia 
+    #Variable vacia
     Empty = ""
     if country_code != Empty:
         country_code = location.raw["address"]["country_code"]
@@ -200,15 +203,15 @@ with col1:
 
 
     coo = "Coordinates"
-    Pais = "Country" 
-    
-    Proyecto = "Project Name"
+    Pais = "Country"
+
+    Proyecto = Proyects.PROJECT_NAME.value
     barra(Proyecto,opcion_elegida)
 
     if country_code != Empty:
         Localizacion_proyecto = "Location Project"
         barra(Localizacion_proyecto,country_name)
-   
+
 
     Industria_tipo = "Industry Type"
     barra(Industria_tipo,fila_seleccionada)
@@ -240,38 +243,41 @@ Mas_informacion = f"<h1 style='text-align: center; color: #576F57; font-size: {t
 st.markdown(Mas_informacion, unsafe_allow_html=True)
 
 prov = df_bonos_proyecto.loc[
-    df_bonos_proyecto["Project Name"] == opcion_elegida,
-    "Provider (Legal Representative of the Project)",
+    df_bonos_proyecto[Proyects.PROJECT_NAME.value] == opcion_elegida,
+    CO2CreditsByProject.PROVIDER.value,
 ].iloc[0]
 entity = df_bonos_proyecto.loc[
-    df_bonos_proyecto["Project Name"] == opcion_elegida, "Verifying Entity"
+    df_bonos_proyecto[Proyects.PROJECT_NAME.value] == opcion_elegida,
+    CO2CreditsByProject.VERIFYING_ENTITY.value,
 ].iloc[0]
 g_b = df_bonos_proyecto.loc[
-    df_bonos_proyecto["Project Name"] == opcion_elegida,
-    "Number of Credits Generated",
+    df_bonos_proyecto[Proyects.PROJECT_NAME.value] == opcion_elegida,
+    CO2CreditsByProject.CREDITS_GENERATED.value,
 ].iloc[0]
 b_p = df_bonos_proyecto.loc[
-    df_bonos_proyecto["Project Name"] == opcion_elegida, "Credits in Packages"
+    df_bonos_proyecto[Proyects.PROJECT_NAME.value] == opcion_elegida,
+    CO2CreditsByProject.BUNDLED_CO2_CREDITS.value,
 ].iloc[0]
 b_d = df_bonos_proyecto.loc[
-    df_bonos_proyecto["Project Name"] == opcion_elegida, "Available Credits"
+    df_bonos_proyecto[Proyects.PROJECT_NAME.value] == opcion_elegida,
+    CO2CreditsByProject.AVAILABLE_CO2_CREDITS.value,
 ].iloc[0]
 n_s = df_bonos_proyecto.loc[
-    df_bonos_proyecto["Project Name"] == opcion_elegida, "Serial Number of Credits"
+    df_bonos_proyecto[Proyects.PROJECT_NAME.value] == opcion_elegida,
+    CO2CreditsByProject.SERIAL_NUMBER_CO2_CREDITS.value,
 ].iloc[0]
 stt = df_bonos_proyecto.loc[
-    df_bonos_proyecto["Project Name"] == opcion_elegida, "Status"
+    df_bonos_proyecto[Proyects.PROJECT_NAME.value] == opcion_elegida,
+    CO2CreditsByProject.STATUS_BUNDLED.value,
 ].iloc[0]
 
-
-
-Localizacion_proyecto = "Provider"
+Localizacion_proyecto = CO2CreditsByProject.PROVIDER.value
 barra(Localizacion_proyecto,country_name)
 
 Industria_tipo = "Verification Entity"
 barra(Industria_tipo,entity)
 
-sdg_proyecto = "Methodology"
+sdg_proyecto = CO2CreditsByProject.METHODOLOGY.value
 barra(sdg_proyecto,Metodologias)
 
 generated_bones = "Generated CO2 Credits"
@@ -286,8 +292,8 @@ barra(available,int(b_d))
 ser = "Serial Number"
 barra(ser,n_s)
 
-status_type = "Status"
-barra(status_type,stt)
+status_type = CO2CreditsByProject.STATUS_BUNDLED.value
+barra(status_type, stt)
 
 st.divider()
 
@@ -383,16 +389,16 @@ with col6:
 
 def mostrar_imagenes_por_columna(vector):
     # Interfaz de usuario
-    
+
 
     # Crear columnas según la longitud del vector
     columns = st.columns(len(vector))
-    
+
 
     # Mostrar imágenes en cada columna
     for i, col in enumerate(columns):
         imagen_numero = vector[i]
         col.image(f"images/sdg/{imagen_numero}.JPG", use_column_width=True)
 
-    
+
 mostrar_imagenes_por_columna(numeros_encontrados)
