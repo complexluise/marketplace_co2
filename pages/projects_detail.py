@@ -14,6 +14,7 @@ from geopy.geocoders import Nominatim
 import pycountry
 import re
 
+from utils.components import format_as_title
 from utils.models import Proyects, CO2CreditsByProject
 
 st.set_page_config(
@@ -39,23 +40,16 @@ def convertir_a_mayusculas(cadena):
     return cadena.upper()
 
 
-opcion_elegida = st.selectbox(
-    "Select the project to consulting:", df_proyectos[Proyects.PROJECT_NAME.value]
-)
+with st.spinner("Please wait"):
+    opcion_elegida = st.selectbox(
+        "Select the project to consulting:", df_proyectos[Proyects.PROJECT_NAME.value]
+    )
 
-Titulo_proy = convertir_a_mayusculas(opcion_elegida)
+    Titulo_proy = convertir_a_mayusculas(opcion_elegida)
 
-st.markdown(
-    "<h1 style='text-align: center; color: green;'>NETZEO2</h1>", unsafe_allow_html=True
-)
+    format_as_title("NETZEO2")
+    format_as_title(Titulo_proy)
 
-
-# Título centrado de color verde y tamaño grande
-
-st.markdown(
-    f"<h1 style='text-align: center; color: green;'>{Titulo_proy}</h1>",
-    unsafe_allow_html=True,
-)
 
 # Obtiene los datos del proyecto
 fila_seleccionada = df_proyectos.loc[

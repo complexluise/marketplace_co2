@@ -1,6 +1,9 @@
 import streamlit as st
 from utils.extract_from_sheets import get_co2_credits_generated_by_project
 
+from utils.components import format_as_title
+
+
 st.set_page_config(
     page_title="Marketplace Proyects",
     page_icon="🧊",
@@ -13,11 +16,10 @@ st.set_page_config(
     },
 )
 
-st.write("Market Place Projects")
+format_as_title("Market Place Projects")
 
-st.write("Table of CO2 Credits Purchases by Project")
+format_as_title("Table of CO2 Credits Purchases by Project")
 
-df = get_co2_credits_generated_by_project()
-
-
-# st.dataframe(get_co2_credits_project_enriched())
+with st.spinner("Please wait"):
+    df = get_co2_credits_generated_by_project()
+    st.dataframe(df)

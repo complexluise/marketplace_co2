@@ -1,7 +1,3 @@
-import streamlit as st
+from utils.components import format_as_title
 
-from utils.extract_from_sheets import get_co2_credits_orders
-
-df = get_co2_credits_orders()
-
-st.dataframe(df)
+format_as_title("Marketplace NetZeo2")
