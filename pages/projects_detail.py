@@ -20,7 +20,7 @@ from utils.models import Proyects, CO2CreditsByProject
 st.set_page_config(
     page_title="Projects Detail",
     page_icon="🧊",
-    layout="wide",
+    layout="centered",
     initial_sidebar_state="collapsed",
     menu_items={
         "Get Help": "https://www.extremelycoolapp.com/help",
