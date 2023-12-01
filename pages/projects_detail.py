@@ -320,9 +320,23 @@ barra(status_type, stt)
 
 st.divider()
 
+# Ejemplo de uso
+cadena_texto = sdgs_table
+numeros_encontrados = extraer_numeros(cadena_texto)
+
+tamaño_letra = 50
+titulo_html = f"<h1 style='text-align: center; color: #576F57; font-size: {tamaño_letra}px;'>This project focuses on these sustainable development goals:</h1>"
+st.markdown(titulo_html, unsafe_allow_html=True)
+
+mostrar_imagenes_por_columna(numeros_encontrados)
+
+
 title_sdg = convertir_a_mayusculas("Sustainable development goals")
 
-st.markdown(f"<h1 style='text-align: center; color: #576F57;'>{title_sdg}</h1>", unsafe_allow_html=True)
+st.markdown(
+    f"<h1 style='text-align: center; color: #576F57;'>{title_sdg}</h1>",
+    unsafe_allow_html=True,
+)
 
 TextSDG = """
     <div style='text-align: center; font-size: 24px;'>
@@ -336,92 +350,3 @@ st.markdown(TextSDG, unsafe_allow_html=True)
 url = "https://sdgs.un.org/goals"
 if st.button("Learn more about the Sustainable Development Goals."):
     webbrowser.open_new_tab(url)
-
-
-col1, col2, col3, col4, col5, col6 = st.columns(6)
-
-# Imagenes de todos los sdg
-obj1 = Image.open("images/sdg/1.JPG")
-obj2 = Image.open("images/sdg/2.JPG")
-obj3 = Image.open("images/sdg/3.JPG")
-obj4 = Image.open("images/sdg/4.JPG")
-obj5 = Image.open("images/sdg/5.JPG")
-obj6 = Image.open("images/sdg/6.JPG")
-obj7 = Image.open("images/sdg/7.JPG")
-obj8 = Image.open("images/sdg/8.JPG")
-obj9 = Image.open("images/sdg/9.JPG")
-obj10 = Image.open("images/sdg/10.JPG")
-obj11 = Image.open("images/sdg/11.JPG")
-obj12 = Image.open("images/sdg/12.JPG")
-obj13 = Image.open("images/sdg/13.JPG")
-obj14 = Image.open("images/sdg/14.JPG")
-obj15 = Image.open("images/sdg/15.JPG")
-obj16 = Image.open("images/sdg/16.JPG")
-obj17 = Image.open("images/sdg/17.JPG")
-obj18 = Image.open("images/sdg/18.JPG")
-
-
-# La siguiente función se utiliza para extrer el número de sdgs de un proyecto
-def extraer_numeros(cadena):
-    # Utilizar expresión regular para encontrar todos los números en la cadena
-    numeros = re.findall(r"\b\d+\b", cadena)
-
-    # Convertir los números de texto a variables numéricas (int o float)
-    numeros_numericos = [int(num) if num.isdigit() else float(num) for num in numeros]
-
-    return numeros_numericos
-
-
-# Ejemplo de uso
-cadena_texto = sdgs_table
-numeros_encontrados = extraer_numeros(cadena_texto)
-
-tamaño_letra = 50
-titulo_html = f"<h1 style='text-align: center; color: #576F57; font-size: {tamaño_letra}px;'>This project focuses on these sustainable sevelopment goals: {numeros_encontrados[0]}, {numeros_encontrados[1]}</h1>"
-st.markdown(titulo_html, unsafe_allow_html=True)
-
-with col1:
-    st.image(obj1)
-    st.image(obj2)
-    st.image(obj3)
-
-with col2:
-    st.image(obj4)
-    st.image(obj5)
-    st.image(obj6)
-
-with col3:
-    st.image(obj7)
-    st.image(obj8)
-    st.image(obj9)
-
-with col4:
-    st.image(obj10)
-    st.image(obj11)
-    st.image(obj12)
-
-with col5:
-    st.image(obj13)
-    st.image(obj14)
-    st.image(obj15)
-
-with col6:
-    st.image(obj16)
-    st.image(obj17)
-    st.image(obj18)
-
-def mostrar_imagenes_por_columna(vector):
-    # Interfaz de usuario
-
-
-    # Crear columnas según la longitud del vector
-    columns = st.columns(len(vector))
-
-
-    # Mostrar imágenes en cada columna
-    for i, col in enumerate(columns):
-        imagen_numero = vector[i]
-        col.image(f"images/sdg/{imagen_numero}.JPG", use_column_width=True)
-
-
-mostrar_imagenes_por_columna(numeros_encontrados)
