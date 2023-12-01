@@ -39,6 +39,29 @@ df_proyectos = df_proyectos.iloc[:-1]
 def convertir_a_mayusculas(cadena):
     return cadena.upper()
 
+
+def mostrar_imagenes_por_columna(vector):
+    # Interfaz de usuario
+
+    # Crear columnas según la longitud del vector
+    columns = st.columns(len(vector))
+
+    # Mostrar imágenes en cada columna
+    for i, col in enumerate(columns):
+        imagen_numero = vector[i]
+        col.image(f"images/sdg/{imagen_numero}.JPG", use_column_width=True)
+
+
+def extraer_numeros(cadena):
+    # Utilizar expresión regular para encontrar todos los números en la cadena
+    numeros = re.findall(r"\b\d+\b", cadena)
+
+    # Convertir los números de texto a variables numéricas (int o float)
+    numeros_numericos = [int(num) if num.isdigit() else float(num) for num in numeros]
+
+    return numeros_numericos
+
+
 #Selectbox para elegir el proyecto a consultar
 with st.spinner("Please wait"):
     opcion_elegida = st.selectbox(
