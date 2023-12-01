@@ -1,5 +1,8 @@
 import streamlit as st
-from utils.extract_from_sheets import get_co2_credits_generated_by_project
+from utils.extract_from_sheets import (
+    get_co2_credits_generated_by_project,
+    get_co2_credits_orders,
+)
 
 from utils.components import format_as_title
 
@@ -22,4 +25,10 @@ format_as_title("Table of CO2 Credits Purchases by Project")
 
 with st.spinner("Please wait"):
     df = get_co2_credits_generated_by_project()
+    st.dataframe(df)
+
+format_as_title("CO2 Credits Orders")
+
+with st.spinner("Please wait"):
+    df = get_co2_credits_orders()
     st.dataframe(df)
