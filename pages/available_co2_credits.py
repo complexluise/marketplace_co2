@@ -26,7 +26,7 @@ with st.spinner("Please wait"):
         color_discrete_sequence=px.colors.qualitative.Pastel,
     )
 
-    st.plotly_chart(fig)
+    st.plotly_chart(fig, use_container_width=True)
 
 
 def main():
