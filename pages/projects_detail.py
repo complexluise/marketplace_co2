@@ -62,7 +62,7 @@ def extraer_numeros(cadena):
     return numeros_numericos
 
 
-#Selectbox para elegir el proyecto a consultar
+# Selectbox para elegir el proyecto a consultar
 with st.spinner("Please wait"):
     opcion_elegida = st.selectbox(
         "Select the project to consulting:", df_proyectos[Proyects.PROJECT_NAME.value]
@@ -94,7 +94,8 @@ sdgs_table = df_proyectos.loc[
     Proyects.SUSTAINABLE_DEVELOPMENT_GOAL.value,
 ].iloc[0]
 
-#Función para convertir coordenadas en texto a una tuple (,)
+
+# Función para convertir coordenadas en texto a una tuple (,)
 def convertir_a_tupla(coordenadas_str):
     """Convierte la cadena str de location a valores numericos"""
     try:
@@ -104,12 +105,12 @@ def convertir_a_tupla(coordenadas_str):
         return None
 
 
-#Conversión de textp a tupla
+# Conversión de textp a tupla
 input_text = Location
 coordinates_transformed = convertir_a_tupla(input_text)
 
 
-#Funciones para obtener información de las coordenadas
+# Funciones para obtener información de las coordenadas
 geolocator = Nominatim(user_agent="app")
 location = geolocator.reverse(coordinates_transformed)
 
@@ -143,44 +144,64 @@ bonos_generados = df_bonos_proyecto.loc[
 ].iloc[0]
 
 
-
 with col1:
-    image5 = Image.open("images/obj/f5.JPG") #Imagen de la ubicación
+    image5 = Image.open("images/obj/f5.JPG")  # Imagen de la ubicación
     image5 = image5.resize((800, 600))
     with st.columns(3)[1]:
         st.image(image5)
 
-    st.markdown("<p style='text-align: center;'><strong>Location:</strong></p>", unsafe_allow_html=True)
-    st.markdown(f"<p style='text-align: center;'>{country_name}</p>", unsafe_allow_html=True)
+    st.markdown(
+        "<p style='text-align: center;'><strong>Location:</strong></p>",
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        f"<p style='text-align: center;'>{country_name}</p>", unsafe_allow_html=True
+    )
 
 with col2:
-    image6 = Image.open("images/obj/f6.JPG") #Imagen planta, tipo de industría
+    image6 = Image.open("images/obj/f6.JPG")  # Imagen planta, tipo de industría
     image6 = image6.resize((800, 600))
     with st.columns(3)[1]:
         st.image(image6)
-    st.markdown("<p style='text-align: center;'><strong>Industry:</strong></p>", unsafe_allow_html=True)
-    st.markdown(f"<p style='text-align: center;'>{fila_seleccionada}</p>", unsafe_allow_html=True)
+    st.markdown(
+        "<p style='text-align: center;'><strong>Industry:</strong></p>",
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        f"<p style='text-align: center;'>{fila_seleccionada}</p>",
+        unsafe_allow_html=True,
+    )
 
 with col3:
-    image7 = Image.open("images/obj/f7.JPG") #Imagen metodología
+    image7 = Image.open("images/obj/f7.JPG")  # Imagen metodología
     image7 = image7.resize((800, 600))
     with st.columns(3)[1]:
         st.image(image7)
-    st.markdown("<p style='text-align: center;'><strong>Methodology:</strong></p>", unsafe_allow_html=True)
-    st.markdown(f"<p style='text-align: center;'>{Metodologias}</p>", unsafe_allow_html=True)
+    st.markdown(
+        "<p style='text-align: center;'><strong>Methodology:</strong></p>",
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        f"<p style='text-align: center;'>{Metodologias}</p>", unsafe_allow_html=True
+    )
 
 
 with col4:
-    image8 = Image.open("images/obj/f8.JPG") #Imagen creditos, carro de compra
+    image8 = Image.open("images/obj/f8.JPG")  # Imagen creditos, carro de compra
     image8 = image8.resize((800, 600))
     with st.columns(3)[1]:
         st.image(image8)
-    st.markdown("<p style='text-align: center;'><strong>Generated CO2 credits:</strong></p>", unsafe_allow_html=True)
-    st.markdown(f"<p style='text-align: center;'>{int(bonos_generados)}</p>", unsafe_allow_html=True)
+    st.markdown(
+        "<p style='text-align: center;'><strong>Generated CO2 credits:</strong></p>",
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        f"<p style='text-align: center;'>{int(bonos_generados)}</p>",
+        unsafe_allow_html=True,
+    )
 
 
-
-image9 = Image.open("images/obj/f9.JPG") #Imagen de turbinas eloicas
+image9 = Image.open("images/obj/f9.JPG")  # Imagen de turbinas eloicas
 
 
 image9 = image9.resize((1250, 480))
@@ -190,22 +211,23 @@ st.divider()
 
 col1, col2 = st.columns(2)
 
+
 # Función para generar barra con dos cadenas de texto
-def barra(a,b):
+def barra(a, b):
     st.info(f"**{a}**: {b}")
 
-with col1:
 
+with col1:
     tamaño_letra = 40
     About = f"<h1 style='text-align: center; color: {Color_verdeoscuro}; font-size: {tamaño_letra}px;'>About</h1>"
     st.markdown(About, unsafe_allow_html=True)
 
     st.write("Description of projects: ", Description)
 
-    #Funciones para la app
+    # Funciones para la app
     geolocator = Nominatim(user_agent="app")
     location = geolocator.reverse(coordinates_transformed)
-    #Variable vacia
+    # Variable vacia
     Empty = ""
     if country_code != Empty:
         country_code = location.raw["address"]["country_code"]
@@ -214,34 +236,31 @@ with col1:
         location = coordinates_transformed
         country_name = coordinates_transformed
 
-    #if opcion_elegida != "Parque Eólico Costa Azul":
-        # TODO Esto deberia ser más general porque pueden existir proyectos diferentes a Costa Azul que cumplen esta misma condición
-     #   geolocator = Nominatim(user_agent="app")
-     #   location = geolocator.reverse(coordinates_transformed)
-     #   country_code = location.raw["address"]["country_code"]
+    # if opcion_elegida != "Parque Eólico Costa Azul":
+    # TODO Esto deberia ser más general porque pueden existir proyectos diferentes a Costa Azul que cumplen esta misma condición
+    #   geolocator = Nominatim(user_agent="app")
+    #   location = geolocator.reverse(coordinates_transformed)
+    #   country_code = location.raw["address"]["country_code"]
     #    country_name = pycountry.countries.get(alpha_2=country_code).name
-  #  else:
+    #  else:
     #    location = coordinates_transformed
     #    country_name = coordinates_transformed
-
 
     coo = "Coordinates"
     Pais = "Country"
 
     Proyecto = Proyects.PROJECT_NAME.value
-    barra(Proyecto,opcion_elegida)
+    barra(Proyecto, opcion_elegida)
 
     if country_code != Empty:
         Localizacion_proyecto = "Location Project"
-        barra(Localizacion_proyecto,country_name)
-
+        barra(Localizacion_proyecto, country_name)
 
     Industria_tipo = "Industry Type"
-    barra(Industria_tipo,fila_seleccionada)
-
+    barra(Industria_tipo, fila_seleccionada)
 
     sdg_proyecto = "List SDG"
-    barra(sdg_proyecto,sdgs_table)
+    barra(sdg_proyecto, sdgs_table)
 
 
 # Agregar contenido a la segunda columna
@@ -295,25 +314,25 @@ stt = df_bonos_proyecto.loc[
 ].iloc[0]
 
 Localizacion_proyecto = CO2CreditsByProject.PROVIDER.value
-barra(Localizacion_proyecto,country_name)
+barra(Localizacion_proyecto, country_name)
 
-Industria_tipo = "Verification Entity"
-barra(Industria_tipo,entity)
+Industria_tipo = "Verification Entity"  # TODO
+barra(Industria_tipo, entity)
 
 sdg_proyecto = CO2CreditsByProject.METHODOLOGY.value
-barra(sdg_proyecto,Metodologias)
+barra(sdg_proyecto, Metodologias)
 
-generated_bones = "Generated CO2 Credits"
-barra(generated_bones,int(g_b))
+generated_bones = "Generated CO2 Credits"  # TODO
+barra(generated_bones, int(g_b))
 
-bones_pk = "CO2 Credits in a Package"
-barra(bones_pk,int(b_p))
+bones_pk = "CO2 Credits in a Package"  # TODO
+barra(bones_pk, int(b_p))
 
-available = "Available CO2 Credits"
-barra(available,int(b_d))
+available = "Available CO2 Credits"  # TODO
+barra(available, int(b_d))
 
-ser = "Serial Number"
-barra(ser,n_s)
+ser = "Serial Number"  # TODO
+barra(ser, n_s)
 
 status_type = CO2CreditsByProject.STATUS_BUNDLED.value
 barra(status_type, stt)
