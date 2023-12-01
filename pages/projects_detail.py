@@ -30,6 +30,10 @@ st.set_page_config(
 )
 
 
+### TODO
+# 1. Organizar por funciones cada una de las secciones
+# 2.
+
 # Lectura tercer dataframe
 df_proyectos = get_projects()
 df_proyectos = df_proyectos.iloc[:-1]
@@ -219,8 +223,7 @@ def barra(a, b):
 
 with col1:
     tamaño_letra = 40
-    About = f"<h1 style='text-align: center; color: {Color_verdeoscuro}; font-size: {tamaño_letra}px;'>About</h1>"
-    st.markdown(About, unsafe_allow_html=True)
+    format_as_title("About")
 
     st.write("Description of projects: ", Description)
 

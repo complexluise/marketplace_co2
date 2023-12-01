@@ -13,6 +13,8 @@ from utils.models import (
     SheetsDatabase,
 )
 
+# TODO debido a las limitaciones en la API de google Sheets,
+#  se necesita una interfaz que permita guardar el archivo temporalmente
 
 # Create a connection object.
 conn = connection("gsheets", type=GSheetsConnection)
