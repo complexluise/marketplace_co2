@@ -1,6 +1,6 @@
 import pytest
 from utils.extract_from_sheets import (
-    select_columns,
+    select_range_columns,
     filter_rows_with_data,
     get_projects,
     conn,
@@ -92,7 +92,7 @@ def test_select_columns():
     # Expected DataFrame
     expected_df = DataFrame({"B": [4, 5, 6], "C": [7, 8, 9]})
 
-    result_df = select_columns(df_mock, "B", "C")
+    result_df = select_range_columns(df_mock, "B", "C")
     assert_frame_equal(result_df, expected_df)
 
 
