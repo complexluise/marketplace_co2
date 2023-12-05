@@ -1,7 +1,7 @@
 from typing import List
 
 import pandas as pd
-from streamlit import connection
+from streamlit import connection, cache_data
 
 from pandas import DataFrame, merge
 from streamlit_gsheets import GSheetsConnection
@@ -20,7 +20,7 @@ from utils.models import (
 conn = connection("gsheets", type=GSheetsConnection)
 
 
-def select_columns(df: DataFrame, column_start: str, column_end: str) -> DataFrame:
+def select_range_columns(df: DataFrame, column_start: str, column_end: str) -> DataFrame:
     """
     Selects a range of columns from the DataFrame based on column names.
 
@@ -72,6 +72,7 @@ def drop_row_if_any_is_negative(df: DataFrame, column_names: list) -> DataFrame:
     return df
 
 
+@cache_data
 def get_projects() -> DataFrame:
     """
     Retrieves project data from a Google Sheets worksheet named 'PROJECTS'.
@@ -86,7 +87,7 @@ def get_projects() -> DataFrame:
     )
 
     return df_projects.pipe(
-        select_columns,
+        select_range_columns,
         column_start=Proyects.PROJECT_NAME.value,
         column_end=Proyects.SUSTAINABLE_DEVELOPMENT_GOAL.value,
     ).pipe(
@@ -99,6 +100,7 @@ def get_projects() -> DataFrame:
     )
 
 
+@cache_data
 def get_co2_credits_generated_by_project() -> DataFrame:
     """
     Retrieves data from a Google Sheets worksheet named 'CO2_CREDITS_PROYECTS'.
@@ -112,7 +114,7 @@ def get_co2_credits_generated_by_project() -> DataFrame:
         nrows=1000,
     )
     return df_co2_credits_project.pipe(
-        select_columns,
+        select_range_columns,
         column_start=CO2CreditsByProject.PROJECT_NAME.value,
         column_end=CO2CreditsByProject.STATUS_BUNDLED.value,
     ).pipe(
@@ -124,6 +126,7 @@ def get_co2_credits_generated_by_project() -> DataFrame:
     )
 
 
+@cache_data
 def get_co2_credits_orders() -> DataFrame:
     """
     Retrieves data from a Google Sheets worksheet named 'CO2_CREDITS_ORDERS'.
@@ -137,7 +140,7 @@ def get_co2_credits_orders() -> DataFrame:
         nrows=1000,
     )
     return df_co2_credits_orders.pipe(
-        select_columns,
+        select_range_columns,
         column_start=CO2CreditsByOrders.BUYERS_NAME.value,
         column_end=CO2CreditsByOrders.COMPENSATION_DESCRIPTION.value,
     ).pipe(
@@ -151,6 +154,7 @@ def get_co2_credits_orders() -> DataFrame:
     )
 
 
+@cache_data
 def get_co2_credits_project_enriched() -> DataFrame:
     """
     Enriches bonos project data by merging it with the projects data.
@@ -164,6 +168,7 @@ def get_co2_credits_project_enriched() -> DataFrame:
     return merge(df_co2_credits_project, df_projects, how="inner")
 
 
+@cache_data
 def get_industry_data() -> DataFrame:
     df_co2_credits_project_enriched = get_co2_credits_project_enriched()
     df_pivot_industry = df_co2_credits_project_enriched.groupby(
