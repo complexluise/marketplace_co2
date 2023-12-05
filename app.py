@@ -131,7 +131,7 @@ with st.spinner("Please wait"):
     column_config_co2_credits_by_project = {
             CO2CreditsByProject.PROJECT_NAME.value: st.column_config.Column(
                 "Project",
-                width="medium",
+                width="small",
             ),
             CO2CreditsByProject.CREDITS_GENERATED.value: st.column_config.Column(
                 "CO2 Credits", width="small"
@@ -162,7 +162,7 @@ with st.spinner("Please wait"):
                 "Buyer's Name", width="small"
             ),
             CO2CreditsByOrders.PROJECT_NAME.value: st.column_config.Column(
-                "Project Name", width="medium"
+                "Project Name", width="small"
             ),
             CO2CreditsByOrders.BONDS_PURCHASED.value: st.column_config.Column(
                 "CO2 Credits Purchased", width="small"
