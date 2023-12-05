@@ -83,7 +83,8 @@ with col2:
         names=Proyects.INDUSTRY.value,
         color_discrete_sequence=px.colors.qualitative.Pastel,
     )
-    fig.update_layout(height=300)
+    fig.update_layout(height=300, showlegend=False)
+    fig.update_traces(textposition="inside", textinfo="percent+label")
 
     st.plotly_chart(fig, use_container_width=True, height=300)
 
