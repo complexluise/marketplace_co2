@@ -124,11 +124,59 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-format_as_title("Table of CO2 Credits Purchases by Project")
+format_as_title("CO2 Credits by Project")
 with st.spinner("Please wait"):
     df = get_co2_credits_generated_by_project()
     st.dataframe(data=df, use_container_width=True, hide_index=True)
+    column_config_co2_credits_by_project = {
+            CO2CreditsByProject.PROJECT_NAME.value: st.column_config.Column(
+                "Project",
+                width="medium",
+            ),
+            CO2CreditsByProject.CREDITS_GENERATED.value: st.column_config.Column(
+                "CO2 Credits", width="small"
+            ),
+            CO2CreditsByProject.AVAILABLE_CO2_CREDITS.value: st.column_config.Column(
+                "Available CO2 Credits", width="small"
+            ),
+            CO2CreditsByProject.SERIAL_NUMBER_CO2_CREDITS.value: st.column_config.Column(
+                "Serial Number CO2 Credits", width="small"
+            ),
+            CO2CreditsByProject.STATUS_BUNDLED.value: st.column_config.Column(
+                "Status Bundled CO2 Credits", width="small"
+            ),
+        }
 
+    st.dataframe(
+        data=df[column_config_co2_credits_by_project.keys()],
+        use_container_width=True,
+        hide_index=True,
+        column_config=column_config_co2_credits_by_project
+    )
+
+format_as_title("CO2 Credits Orders")
 with st.spinner("Please wait"):
     df = get_co2_credits_orders()
-    st.dataframe(data=df, use_container_width=True, hide_index=True)
+    column_config_co2_credits_by_orders = {
+            CO2CreditsByOrders.BUYERS_NAME.value: st.column_config.Column(
+                "Buyer's Name", width="small"
+            ),
+            CO2CreditsByOrders.PROJECT_NAME.value: st.column_config.Column(
+                "Project Name", width="medium"
+            ),
+            CO2CreditsByOrders.BONDS_PURCHASED.value: st.column_config.Column(
+                "CO2 Credits Purchased", width="small"
+            ),
+            CO2CreditsByOrders.SERIAL_NUMBER.value: st.column_config.Column(
+                "Serial Number", width="small"
+            ),
+            CO2CreditsByOrders.STATUS.value: st.column_config.Column(
+                "Status", width="small"
+            ),
+        }
+
+    st.dataframe(
+        data=df[column_config_co2_credits_by_orders.keys()],
+        use_container_width=True,
+        hide_index=True,
+        column_config=column_config_co2_credits_by_orders)
