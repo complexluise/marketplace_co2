@@ -1,13 +1,4 @@
 import streamlit as st
-import plotly.express as px
-from utils.components import format_as_title, format_as_subtitle
-from utils.extract_from_sheets import (
-    get_industry_data,
-    get_co2_credits_generated_by_project,
-    get_co2_credits_orders,
-)
-from utils.models import Proyects, CO2CreditsByProject
-
 
 # Configura la pagina
 st.set_page_config(
@@ -20,6 +11,15 @@ st.set_page_config(
         "About": "# This is a header. This is an *extremely* cool app!",
     },
 )
+
+import plotly.express as px
+from utils.components import format_as_title, format_as_subtitle
+from utils.extract_from_sheets import (
+    get_industry_data,
+    get_co2_credits_generated_by_project,
+    get_co2_credits_orders,
+)
+from utils.models import Proyects, CO2CreditsByProject, CO2CreditsByOrders
 
 # Oculta SideBar
 st.markdown(
@@ -127,7 +127,6 @@ st.markdown(
 format_as_title("CO2 Credits by Project")
 with st.spinner("Please wait"):
     df = get_co2_credits_generated_by_project()
-    st.dataframe(data=df, use_container_width=True, hide_index=True)
     column_config_co2_credits_by_project = {
             CO2CreditsByProject.PROJECT_NAME.value: st.column_config.Column(
                 "Project",
