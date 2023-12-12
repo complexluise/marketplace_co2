@@ -2,14 +2,9 @@ import streamlit as st
 
 # Configura la pagina
 st.set_page_config(
-    page_title="Marketplace NetZeo2",
-    layout="centered",
+    page_title="Marketplace NET ZEO2",
+    layout="wide",
     initial_sidebar_state="collapsed",
-    menu_items={
-        "Get Help": "https://www.extremelycoolapp.com/help",
-        "Report a bug": "https://www.extremelycoolapp.com/bug",
-        "About": "# This is a header. This is an *extremely* cool app!",
-    },
 )
 
 import plotly.express as px
@@ -59,7 +54,10 @@ st.markdown(
 
 
 # Title with custom CSS class
-format_as_title("Marketplace NetZeo2")
+st.markdown(
+        f"<h1 style='text-align: center; color: #576F58;'>Marketplace NET ZEO2</h1>",
+        unsafe_allow_html=True,
+    )
 
 col1, col2 = st.columns(2)
 
@@ -89,61 +87,22 @@ with col2:
     st.plotly_chart(fig, use_container_width=True, height=300)
 
 
-# Custom CSS for shadow box
-st.markdown(
-    """
-<style>
-.shadow-box {
-    border-radius: 10px; /* rounded corners */
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); /* horizontal offset, vertical offset, blur radius, spread radius, color */
-    padding: 20px; /* space inside the box */
-    margin: 10px; /* space outside the box */
-    background: #ffffff; /* background color */
-    }
-    
-/* Add this CSS for centering h2 elements inside the shadow-box */
-.shadow-box h2 {
-    text-align: center; /* centers the text */
-    margin: 0; /* remove default margin */
-    color: #576F58; /* color NetZeo2 */
-}
-</style>
-""",
-    unsafe_allow_html=True,
-)
-
-# Text inside the shadow box
-st.markdown(
-    """
-<div class="shadow-box">
-    <h2>CO2 Tons Reduced</h2>
-    <p>Explore our options and discover how you can be part of the change. By participating in these 
-    projects, you are taking concrete steps to offset your carbon footprint and help protect our 
-    precious planet.</p>
-</div>
-""",
-    unsafe_allow_html=True,
-)
-
 format_as_title("CO2 Credits by Project")
 with st.spinner("Please wait"):
     df = get_co2_credits_generated_by_project()
     column_config_co2_credits_by_project = {
             CO2CreditsByProject.PROJECT_NAME.value: st.column_config.Column(
                 "Project",
-                width="small",
-            ),
-            CO2CreditsByProject.CREDITS_GENERATED.value: st.column_config.Column(
-                "CO2 Credits", width="small"
+                #width="small",
             ),
             CO2CreditsByProject.AVAILABLE_CO2_CREDITS.value: st.column_config.Column(
-                "Available CO2 Credits", width="small"
+                "Available CO2 Credits", #width="small"
             ),
             CO2CreditsByProject.SERIAL_NUMBER_CO2_CREDITS.value: st.column_config.Column(
-                "Serial Number CO2 Credits", width="small"
+                "Serial Number CO2 Credits", #width="small"
             ),
             CO2CreditsByProject.STATUS_BUNDLED.value: st.column_config.Column(
-                "Status Bundled CO2 Credits", width="small"
+                "Status Bundled CO2 Credits",# width="small"
             ),
         }
 
