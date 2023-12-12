@@ -3,7 +3,7 @@ from st_aggrid import GridOptionsBuilder, AgGrid
 from streamlit_extras.stylable_container import stylable_container
 
 st.set_page_config(
-    page_title="Projects Detail",
+    page_title="Example Tables",
     page_icon="🧊",
     layout="wide",
     initial_sidebar_state="collapsed",
