@@ -1,8 +1,14 @@
 import streamlit as st
+
+st.set_page_config(
+    page_title="Projects Detail",
+    page_icon="🧊",
+    layout="centered",
+    initial_sidebar_state="collapsed",
+
+)
+
 import pandas as pd
-import matplotlib.pyplot as plt
-import base64
-import numpy as np
 from PIL import Image
 import webbrowser
 from utils.extract_from_sheets import (
@@ -17,18 +23,42 @@ import re
 from utils.components import format_as_title
 from utils.models import Proyects, CO2CreditsByProject
 
-st.set_page_config(
-    page_title="Projects Detail",
-    page_icon="🧊",
-    layout="centered",
-    initial_sidebar_state="collapsed",
-    menu_items={
-        "Get Help": "https://www.extremelycoolapp.com/help",
-        "Report a bug": "https://www.extremelycoolapp.com/bug",
-        "About": "# This is a header. This is an *extremely* cool app!",
-    },
+
+# Oculta SideBar
+st.markdown(
+    """
+<style>
+   [data-testid="collapsedControl"] {
+       display: none
+   }
+</style>
+""",
+    unsafe_allow_html=True,
 )
 
+# Oculta Footer
+hide_streamlit_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
+# Hide Space
+st.markdown(
+    """
+        <style>
+               .block-container {
+                    padding-top: 1rem;
+                    padding-bottom: 0rem;
+                    padding-left: 1rem;
+                    padding-right: 1rem;
+                }
+        </style>
+        """,
+    unsafe_allow_html=True,
+)
 
 ### TODO
 # 1. Organizar por funciones cada una de las secciones
