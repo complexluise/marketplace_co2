@@ -55,9 +55,9 @@ st.markdown(
 
 # Title with custom CSS class
 st.markdown(
-        f"<h1 style='text-align: center; color: #576F58;'>Marketplace NET ZEO2</h1>",
-        unsafe_allow_html=True,
-    )
+    f"<h1 style='text-align: center; color: #576F58;'>Marketplace NET ZEO2</h1>",
+    unsafe_allow_html=True,
+)
 
 col1, col2 = st.columns(2)
 
@@ -91,51 +91,52 @@ format_as_title("CO2 Credits by Project")
 with st.spinner("Please wait"):
     df = get_co2_credits_generated_by_project()
     column_config_co2_credits_by_project = {
-            CO2CreditsByProject.PROJECT_NAME.value: st.column_config.Column(
-                "Project",
-                #width="small",
-            ),
-            CO2CreditsByProject.AVAILABLE_CO2_CREDITS.value: st.column_config.Column(
-                "Available CO2 Credits", #width="small"
-            ),
-            CO2CreditsByProject.SERIAL_NUMBER_CO2_CREDITS.value: st.column_config.Column(
-                "Serial Number CO2 Credits", #width="small"
-            ),
-            CO2CreditsByProject.STATUS_BUNDLED.value: st.column_config.Column(
-                "Status Bundled CO2 Credits",# width="small"
-            ),
-        }
+        CO2CreditsByProject.PROJECT_NAME.value: st.column_config.Column(
+            "Project",
+            # width="small",
+        ),
+        CO2CreditsByProject.AVAILABLE_CO2_CREDITS.value: st.column_config.Column(
+            "Available CO2 Credits",  # width="small"
+        ),
+        CO2CreditsByProject.SERIAL_NUMBER_CO2_CREDITS.value: st.column_config.Column(
+            "Serial Number CO2 Credits",  # width="small"
+        ),
+        CO2CreditsByProject.STATUS_BUNDLED.value: st.column_config.Column(
+            "Status Bundled CO2 Credits",  # width="small"
+        ),
+    }
 
     st.dataframe(
         data=df[column_config_co2_credits_by_project.keys()],
         use_container_width=True,
         hide_index=True,
-        column_config=column_config_co2_credits_by_project
+        column_config=column_config_co2_credits_by_project,
     )
 
 format_as_title("CO2 Credits Orders")
 with st.spinner("Please wait"):
     df = get_co2_credits_orders()
     column_config_co2_credits_by_orders = {
-            CO2CreditsByOrders.BUYERS_NAME.value: st.column_config.Column(
-                "Buyer's Name", width="small"
-            ),
-            CO2CreditsByOrders.PROJECT_NAME.value: st.column_config.Column(
-                "Project Name", width="small"
-            ),
-            CO2CreditsByOrders.BONDS_PURCHASED.value: st.column_config.Column(
-                "CO2 Credits Purchased", width="small"
-            ),
-            CO2CreditsByOrders.SERIAL_NUMBER.value: st.column_config.Column(
-                "Serial Number", width="small"
-            ),
-            CO2CreditsByOrders.STATUS.value: st.column_config.Column(
-                "Status", width="small"
-            ),
-        }
+        CO2CreditsByOrders.BUYERS_NAME.value: st.column_config.Column(
+            "Buyer's Name", width="small"
+        ),
+        CO2CreditsByOrders.PROJECT_NAME.value: st.column_config.Column(
+            "Project Name", width="small"
+        ),
+        CO2CreditsByOrders.BONDS_PURCHASED.value: st.column_config.Column(
+            "CO2 Credits Purchased", width="small"
+        ),
+        CO2CreditsByOrders.SERIAL_NUMBER.value: st.column_config.Column(
+            "Serial Number", width="small"
+        ),
+        CO2CreditsByOrders.STATUS.value: st.column_config.Column(
+            "Status", width="small"
+        ),
+    }
 
     st.dataframe(
         data=df[column_config_co2_credits_by_orders.keys()],
         use_container_width=True,
         hide_index=True,
-        column_config=column_config_co2_credits_by_orders)
+        column_config=column_config_co2_credits_by_orders,
+    )

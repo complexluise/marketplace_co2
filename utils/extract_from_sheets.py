@@ -20,7 +20,9 @@ from utils.models import (
 conn = connection("gsheets", type=GSheetsConnection)
 
 
-def select_range_columns(df: DataFrame, column_start: str, column_end: str) -> DataFrame:
+def select_range_columns(
+    df: DataFrame, column_start: str, column_end: str
+) -> DataFrame:
     """
     Selects a range of columns from the DataFrame based on column names.
 

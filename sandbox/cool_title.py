@@ -33,7 +33,9 @@ st.markdown(
 )
 
 # Title with custom CSS class
-st.markdown('<div class="main_title">MARKETPLACE PROJECTS</div>', unsafe_allow_html=True)
+st.markdown(
+    '<div class="main_title">MARKETPLACE PROJECTS</div>', unsafe_allow_html=True
+)
 
 # Decorative star (using an emoji as a placeholder)
 st.markdown(":star:", unsafe_allow_html=True)
